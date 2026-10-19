@@ -11,6 +11,14 @@
 // },
 window.PROJECTS = [
   {
+    title: "Gatewright",
+    description: "A puzzle game: start with one NAND gate and wire your way up to a working 8-bit CPU, then write assembly that runs on it.",
+    tags: ["game", "logic", "cpu", "javascript"],
+    link: "https://ting39.github.io/gatewright/",
+    repo: "https://github.com/ting39/gatewright",
+    emoji: "🔌"
+  },
+  {
     title: "2048: Stellar",
     description: "2048 in space. Merge stardust into stars and black holes, with combos, powers, a time-warp mode and secret achievements.",
     tags: ["game", "javascript"],
