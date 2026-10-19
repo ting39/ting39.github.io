@@ -136,14 +136,21 @@
       if (!tracks.length) return;
       document.getElementById("tracks").innerHTML = tracks.map((t, i) => {
         const url = safeUrl(t.url), img = safeUrl(t.image);
-        const tag = url ? `a href="${esc(url)}" target="_blank" rel="noopener"` : "div";
-        return `<li><${tag} class="card track">
+        const id = ((url || "").match(/open\.spotify\.com\/track\/([A-Za-z0-9]+)/) || [])[1];
+        const title = url
+          ? `<a href="${esc(url)}" target="_blank" rel="noopener" title="Open in Spotify"><b>${esc(t.name)}</b></a>`
+          : `<b>${esc(t.name)}</b>`;
+        return `<li><div class="card track">
           <span class="rank">${i + 1}</span>
-          ${img ? `<img src="${esc(img)}" alt="" loading="lazy" width="64" height="64">` : `<span class="noart">♪</span>`}
-          <span class="meta"><b>${esc(t.name)}</b><small>${esc(t.artists)}</small></span>
+          <span class="art">
+            ${img ? `<img src="${esc(img)}" alt="" loading="lazy" width="64" height="64">` : `<span class="noart">♪</span>`}
+            ${id ? `<button class="play" data-id="${id}" aria-label="Play ${esc(t.name)}"><span class="ico">▶</span></button>` : ""}
+          </span>
+          <span class="meta">${title}<small>${esc(t.artists)}</small></span>
           <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
-        </${tag.split(" ")[0]}></li>`;
+        </div></li>`;
       }).join("");
+      setupPlayer();
       document.getElementById("musicUpdated").textContent = data.updated || "";
       const sec = document.getElementById("music");
       sec.hidden = false;
@@ -152,6 +159,65 @@
       io.observe(sec); navIO.observe(sec);
     })
     .catch(() => {});
+
+  // One shared Spotify embed under the list, loaded only on the first ▶ click
+  // (so visitors who never press play load nothing from Spotify).
+  function setupPlayer() {
+    const list = document.getElementById("tracks");
+    const box = document.getElementById("player");
+    let controller = null, current = null, paused = true, pending = null;
+
+    const render = () => {
+      list.querySelectorAll(".track").forEach((row) => {
+        const btn = row.querySelector(".play");
+        const on = !!btn && btn.dataset.id === current;
+        row.classList.toggle("active", on);
+        row.classList.toggle("playing", on && !paused);
+        if (btn) {
+          btn.querySelector(".ico").textContent = on && !paused ? "❚❚" : "▶";
+          btn.setAttribute("aria-label", (on && !paused ? "Pause " : "Play ") + row.querySelector("b").textContent);
+        }
+      });
+    };
+
+    const start = (id) => {
+      current = id; paused = false; render();
+      if (controller) { controller.loadUri("spotify:track:" + id); controller.play(); return; }
+      pending = id;
+      if (document.getElementById("spotify-iframe-api")) return;
+      box.hidden = false;
+      window.onSpotifyIframeApiReady = (API) => {
+        const el = document.createElement("div");
+        box.querySelector(".player-slot").replaceChildren(el);
+        API.createController(el, { uri: "spotify:track:" + pending, width: "100%", height: 152 }, (c) => {
+          controller = c;
+          c.addListener("ready", () => c.play());
+          c.addListener("playback_update", (e) => {
+            const p = !!(e && e.data && e.data.isPaused);
+            if (p !== paused) { paused = p; render(); }
+          });
+        });
+      };
+      const s = document.createElement("script");
+      s.id = "spotify-iframe-api";
+      s.src = "https://open.spotify.com/embed/iframe-api/v1";
+      s.async = true;
+      s.onerror = () => { box.querySelector(".player-slot").textContent = "Couldn't load the Spotify player. Try the song links instead."; };
+      document.body.appendChild(s);
+    };
+
+    list.addEventListener("click", (e) => {
+      const btn = e.target.closest(".play");
+      if (!btn) return;
+      const id = btn.dataset.id;
+      if (id === current && controller) {
+        controller.togglePlay();
+        paused = !paused; render();
+      } else {
+        start(id);
+      }
+    });
+  }
 
   function tilt(el) {
     if (reduced) return;
