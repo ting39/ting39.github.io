@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ting39</title>
+  <meta name="description" content="ting39 — personal homepage, projects and experiments.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <div class="cursor-glow" aria-hidden="true"></div>
+
+  <header class="nav">
+    <a class="logo" href="#top">ting39<span class="blink">_</span></a>
+    <nav>
+      <a href="#about">about</a>
+      <a href="#projects">projects</a>
+      <a href="#contact">contact</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">◐</button>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <p class="mono kicker">~/hello-world $</p>
+      <h1 class="glitch" data-text="ting39">ting39</h1>
+      <p class="tagline">
+        <span class="mono">&gt;</span> <span id="typed"></span><span class="caret">|</span>
+      </p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#projects">See projects</a>
+        <a class="btn ghost" href="#contact">Say hi</a>
+      </div>
+      <a class="scroll-hint" href="#about" aria-label="Scroll down"><span></span></a>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section reveal">
+      <h2><span class="num">01.</span> about</h2>
+      <div class="about-grid">
+        <div class="card about-text">
+          <p>Hi, I'm <strong>ting39</strong>. This is my corner of the internet, a place for the things I build, break and learn along the way.</p>
+          <p class="muted">More about me is coming soon. For now, enjoy the stars.</p>
+        </div>
+        <div class="card stats">
+          <div><span class="stat" data-count="0">0</span><small>projects shipped</small></div>
+          <div><span class="stat">∞</span><small>ideas queued</small></div>
+          <div><span class="stat" id="year"></span><small>started</small></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="section reveal">
+      <h2><span class="num">02.</span> projects</h2>
+      <div class="filters" id="filters"></div>
+      <div class="project-grid" id="projectGrid"></div>
+      <div class="empty card" id="emptyState" hidden>
+        <div class="orbit"><span></span></div>
+        <h3>Nothing here yet</h3>
+        <p class="muted">Projects are being built in the playground. Check back soon.</p>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section reveal">
+      <h2><span class="num">03.</span> contact</h2>
+      <div class="card contact">
+        <p>Want to collaborate, or just say hello?</p>
+        <div class="links">
+          <a class="btn primary" href="https://github.com/ting39" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p class="mono">built from scratch · hosted on GitHub Pages · © <span id="footYear"></span> ting39</p>
+  </footer>
+
+  <script src="projects.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
