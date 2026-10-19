@@ -1,0 +1,60 @@
+/* the homepage pet (assets/pet.js) */
+.pet-wrap { position: fixed; left: 0; top: 0; z-index: 9; width: 48px; height: 48px; will-change: transform; }
+.pet {
+  display: block; width: 48px; height: 48px; padding: 0; border: 0; background: none; cursor: grab;
+  touch-action: none; -webkit-tap-highlight-color: transparent; border-radius: 12px;
+}
+.pet canvas { display: block; image-rendering: pixelated; filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .35)); }
+.pet:focus-visible { outline: 2px dashed var(--a2); outline-offset: 2px; }
+.pet-wrap.held .pet { cursor: grabbing; }
+.pet-wrap.held canvas { filter: drop-shadow(0 14px 10px rgba(0, 0, 0, .35)); }
+
+.pet-bubble {
+  position: absolute; bottom: calc(100% + 10px); left: 50%; translate: -50% 4px;
+  max-width: 220px; width: max-content; padding: 6px 11px; border-radius: 12px;
+  background: var(--bg-2); color: var(--fg); border: 1px solid var(--border);
+  font: 500 .8rem/1.35 "Space Grotesk", system-ui, sans-serif; text-align: center;
+  box-shadow: 0 8px 24px -10px rgba(0, 0, 0, .6);
+  opacity: 0; pointer-events: none; transition: opacity .2s, translate .2s;
+}
+.pet-bubble::after {
+  content: ""; position: absolute; top: 100%; left: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px;
+  background: inherit; border: inherit; border-width: 0 1px 1px 0; rotate: 45deg;
+}
+.pet-bubble.on { opacity: 1; translate: -50% 0; }
+.edge-l .pet-bubble { left: 0; translate: 0 4px; } .edge-l .pet-bubble.on { translate: 0 0; } .edge-l .pet-bubble::after { left: 24px; }
+.edge-r .pet-bubble { left: auto; right: 0; translate: 0 4px; } .edge-r .pet-bubble.on { translate: 0 0; } .edge-r .pet-bubble::after { left: auto; right: 20px; }
+
+.pet-tools {
+  position: absolute; bottom: calc(100% + 2px); left: 50%; translate: -50% 6px; display: flex; gap: 4px; padding: 4px;
+  border-radius: 999px; background: var(--bg-2); border: 1px solid var(--border); box-shadow: 0 8px 24px -10px rgba(0, 0, 0, .6);
+  opacity: 0; visibility: hidden; transition: opacity .18s, translate .18s, visibility 0s .18s;
+}
+.pet-tools button {
+  width: 28px; height: 28px; border-radius: 50%; border: 0; background: transparent; color: var(--fg);
+  font-size: .85rem; cursor: pointer; display: grid; place-items: center;
+}
+.pet-tools button:hover, .pet-tools button:focus-visible { background: var(--card); color: var(--a2); outline: none; }
+.pet-tools button[data-a="pat"] { color: #ff7ab8; } .pet-tools button[data-a="feed"] { color: #ffd166; }
+@media (hover: hover) { .pet-wrap:not(.held):hover .pet-tools { opacity: 1; visibility: visible; translate: -50% 0; transition-delay: 0s; } }
+.pet-wrap:focus-within .pet-tools, .pet-wrap.open .pet-tools { opacity: 1; visibility: visible; translate: -50% 0; transition-delay: 0s; }
+.pet-wrap:hover .pet-bubble, .pet-wrap:focus-within .pet-bubble, .pet-wrap.open .pet-bubble { bottom: calc(100% + 44px); }
+.edge-l .pet-tools { left: 0; translate: 0 6px; } .edge-r .pet-tools { left: auto; right: 0; translate: 0 6px; }
+.edge-l:hover .pet-tools, .edge-l:focus-within .pet-tools, .edge-l.open .pet-tools,
+.edge-r:hover .pet-tools, .edge-r:focus-within .pet-tools, .edge-r.open .pet-tools { translate: 0 0; }
+
+.pet-restore {
+  position: fixed; right: 10px; bottom: 10px; z-index: 9; width: 30px; height: 30px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--card); color: var(--muted); cursor: pointer; opacity: .45;
+  backdrop-filter: blur(8px); transition: opacity .2s, color .2s;
+}
+.pet-restore:hover, .pet-restore:focus-visible { opacity: 1; color: #ffd166; outline: none; }
+
+.pet-fx { position: fixed; inset: 0; z-index: 9; pointer-events: none; overflow: hidden; }
+.pet-p { position: absolute; font: 700 14px/1 "JetBrains Mono", monospace; animation: pet-float 1.4s ease-out forwards; }
+.pet-heart { color: #ff7ab8; } .pet-gold { color: #ffd166; } .pet-note { color: var(--a2); font-size: 16px; }
+.pet-z { color: var(--muted); font-size: 12px; animation-duration: 2.4s; }
+@keyframes pet-float { 0% { opacity: 0; transform: translate(-50%, 0) scale(.6); } 15% { opacity: 1; } 100% { opacity: 0; transform: translate(calc(-50% + var(--dx, 0px)), -46px) scale(1.1); } }
+.pet-treat { position: absolute; top: 0; color: #ffd166; font-size: 18px; text-shadow: 0 0 10px #ffd166; animation: pet-drop .65s cubic-bezier(.5, 0, 1, .6) forwards; }
+@keyframes pet-drop { from { transform: translate(-50%, -20px) rotate(0); } to { transform: translate(-50%, var(--fall)) rotate(360deg); opacity: .4; } }
+@media print { .pet-wrap, .pet-restore, .pet-fx { display: none !important; } }

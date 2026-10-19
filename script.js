@@ -319,6 +319,14 @@
   if (/^#(terminal|t39sh)$/.test(location.hash)) openTerminal();
   console.log("%c✦ psst: press ` (backtick) on this page.", "color:#00e0c6;font-family:monospace");
 
+  // ---- the homepage pet: loaded once the page is idle, so it never delays the first paint ----
+  const PET_V = "1";
+  addEventListener("load", () => (window.requestIdleCallback || ((f) => setTimeout(f, 1200)))(() => {
+    load("link", { rel: "stylesheet", href: `assets/pet.css?v=${PET_V}` })
+      .then(() => load("script", { src: `assets/pet.js?v=${PET_V}` }))
+      .catch(() => {});
+  }, { timeout: 3000 }));
+
   // ---- an old cheat code ----
   const konami = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
   let kpos = 0;
