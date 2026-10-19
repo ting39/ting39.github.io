@@ -11,6 +11,14 @@
 // },
 window.PROJECTS = [
   {
+    title: "Eighth Segment",
+    description: "A hard, minimal precision platformer. You are the decimal point; lit segments are solid, and every number in the machine is counting something. Move + jump only — progress comes from figuring out what the numbers mean.",
+    tags: ["game", "platformer", "puzzle", "canvas", "web audio"],
+    link: "https://ting39.github.io/eighth-segment/",
+    repo: "https://github.com/ting39/eighth-segment",
+    emoji: "🔢"
+  },
+  {
     title: "Gatewright",
     description: "A puzzle game: start with one NAND gate and wire your way up to a working 8-bit CPU, then write assembly that runs on it.",
     tags: ["game", "logic", "cpu", "javascript"],
