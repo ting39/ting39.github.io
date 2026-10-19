@@ -20,8 +20,8 @@ window.PROJECTS = [
   },
   {
     title: "2048: Stellar",
-    description: "2048 in space. Merge stardust into stars and black holes, with combos, powers, a time-warp mode and secret achievements.",
-    tags: ["game", "javascript"],
+    description: "2048 in space. Merge stardust into stars and black holes, with combos, powers, a time-warp mode, secret achievements, and an AI you can watch play or ask for hints.",
+    tags: ["game", "javascript", "ai"],
     link: "https://ting39.github.io/2048/",
     repo: "https://github.com/ting39/2048",
     emoji: "🪐"
