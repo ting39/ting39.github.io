@@ -18,4 +18,12 @@ window.PROJECTS = [
     repo: "https://github.com/ting39/2048",
     emoji: "🪐"
   },
+  {
+    title: "NTU 3D Walk",
+    description: "Walk around National Taiwan University's main campus in 3D: 椰林大道, 傅鐘, 醉月湖 and 549 buildings, built from OpenStreetMap.",
+    tags: ["3d", "javascript", "map"],
+    link: "https://ting39.github.io/ntu3d/",
+    repo: "https://github.com/ting39/ntu3d",
+    emoji: "🌴"
+  },
 ];
