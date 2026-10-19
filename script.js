@@ -7,10 +7,11 @@
     const saved = localStorage.getItem("theme");
     if (saved) root.dataset.theme = saved;
   } catch {}
-  document.getElementById("themeToggle").addEventListener("click", () => {
-    root.dataset.theme = root.dataset.theme === "light" ? "dark" : "light";
-    try { localStorage.setItem("theme", root.dataset.theme); } catch {}
-  });
+  const setTheme = (t) => {
+    root.dataset.theme = t;
+    try { localStorage.setItem("theme", t); } catch {}
+  };
+  document.getElementById("themeToggle").addEventListener("click", () => setTheme(root.dataset.theme === "light" ? "dark" : "light"));
 
   // ---- years ----
   const y = new Date().getFullYear();
@@ -39,7 +40,7 @@
   // ---- starfield / constellation ----
   const c = document.getElementById("sky");
   const ctx = c.getContext("2d");
-  let W, H, stars = [], mouse = { x: -999, y: -999 };
+  let W, H, stars = [], mouse = { x: -999, y: -999 }, warpUntil = 0, warpK = 0;
   function resize() {
     const dpr = Math.min(devicePixelRatio || 1, 2);
     W = innerWidth; H = innerHeight;
@@ -56,7 +57,21 @@
   function draw() {
     const rgb = getComputedStyle(root).getPropertyValue("--star").trim();
     ctx.clearRect(0, 0, W, H);
+    // warp drive (terminal `warp`, or the Konami code): stars stream out from the centre
+    warpK += ((performance.now() < warpUntil ? 1 : 0) - warpK) * .045;
+    if (warpK < .003) warpK = 0;
     for (const s of stars) {
+      if (warpK) {
+        const dx = s.x - W / 2, dy = s.y - H / 2, px = s.x, py = s.y, k = warpK * .07;
+        s.x += dx * k + Math.sign(dx || 1) * warpK; s.y += dy * k;
+        if (s.x < 0 || s.x > W || s.y < 0 || s.y > H) {
+          s.x = W / 2 + (Math.random() - .5) * W * .3; s.y = H / 2 + (Math.random() - .5) * H * .3;
+        } else {
+          ctx.strokeStyle = `rgba(${rgb},${Math.min(.9, warpK)})`;
+          ctx.lineWidth = s.r;
+          ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(s.x, s.y); ctx.stroke();
+        }
+      }
       if (!reduced) { s.x += s.vx; s.y += s.vy; s.tw += .02; }
       if (s.x < 0) s.x = W; if (s.x > W) s.x = 0;
       if (s.y < 0) s.y = H; if (s.y > H) s.y = 0;
@@ -129,8 +144,11 @@
 
   // ---- music: top 5 from Spotify (spotify.json is refreshed weekly by a GitHub Action) ----
   const safeUrl = (u) => (/^https:\/\//.test(u || "") ? u : null);
-  fetch("spotify.json", { cache: "no-cache" })
+  const spotifyP = fetch("spotify.json", { cache: "no-cache" })
     .then((r) => (r.ok ? r.json() : null))
+    .catch(() => null);
+  let player = null;
+  spotifyP
     .then((data) => {
       const tracks = (data && data.tracks) || [];
       if (!tracks.length) return;
@@ -150,7 +168,7 @@
           <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
         </div></li>`;
       }).join("");
-      setupPlayer();
+      player = setupPlayer(tracks);
       document.getElementById("musicUpdated").textContent = data.updated || "";
       const sec = document.getElementById("music");
       sec.hidden = false;
@@ -162,7 +180,7 @@
 
   // One shared Spotify embed under the list, loaded only on the first ▶ click
   // (so visitors who never press play load nothing from Spotify).
-  function setupPlayer() {
+  function setupPlayer(tracks) {
     const list = document.getElementById("tracks");
     const box = document.getElementById("player");
     let controller = null, current = null, paused = true, pending = null;
@@ -178,6 +196,8 @@
           btn.setAttribute("aria-label", (on && !paused ? "Pause " : "Play ") + row.querySelector("b").textContent);
         }
       });
+      // the homepage pet dances along; the terminal shows what's playing
+      document.dispatchEvent(new CustomEvent("site:playing", { detail: { playing: !!current && !paused, id: current } }));
     };
 
     const start = (id) => {
@@ -206,18 +226,82 @@
       document.body.appendChild(s);
     };
 
+    const toggle = () => {
+      if (!controller) return false;
+      controller.togglePlay();
+      paused = !paused; render();
+      return true;
+    };
     list.addEventListener("click", (e) => {
       const btn = e.target.closest(".play");
       if (!btn) return;
       const id = btn.dataset.id;
-      if (id === current && controller) {
-        controller.togglePlay();
-        paused = !paused; render();
-      } else {
-        start(id);
-      }
+      if (id === current && controller) toggle();
+      else start(id);
     });
+    const ids = tracks.map((t) => ((t.url || "").match(/open\.spotify\.com\/track\/([A-Za-z0-9]+)/) || [])[1]);
+    return {
+      play(i) { if (!ids[i]) return false; if (ids[i] === current && paused && controller) toggle(); else if (ids[i] !== current) start(ids[i]); return true; },
+      toggle,
+      state: () => (current ? { index: ids.indexOf(current), paused } : null),
+    };
   }
+
+  // ---- shared API for the terminal and the pet (both load lazily) ----
+  let postsP = null;
+  window.SITE = {
+    setTheme,
+    scrollTo(id) {
+      const el = id === "top" ? document.body : document.getElementById(id);
+      if (el && !el.hidden) el.scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+    },
+    warp(ms = 3000) { if (!reduced) warpUntil = performance.now() + ms; },
+    getSpotify: () => spotifyP,
+    getPosts: () => (postsP ||= fetch("posts.json", { cache: "no-cache" }).then((r) => (r.ok ? r.json() : null)).catch(() => null)),
+    playTrack: (i) => !!player && player.play(i),
+    togglePlay: () => !!player && player.toggle(),
+    nowPlaying: () => (player ? player.state() : null),
+  };
+
+  // ---- secret terminal: ` (or the >_ in the footer, or #terminal) opens it; code loads on first use ----
+  const TERM_V = "1";
+  let termP = null;
+  const load = (tag, attrs) => new Promise((res, rej) => {
+    const el = Object.assign(document.createElement(tag), attrs);
+    el.onload = res; el.onerror = rej;
+    document.head.appendChild(el);
+  });
+  function openTerminal(cmd) {
+    if (window.T39SH) return window.T39SH.open(cmd);
+    termP ||= Promise.all([
+      load("link", { rel: "stylesheet", href: `assets/terminal.css?v=${TERM_V}` }),
+      load("script", { src: `assets/terminal.js?v=${TERM_V}` }),
+    ]).catch((e) => { termP = null; throw e; });
+    termP.then(() => window.T39SH.open(cmd)).catch(() => {});
+  }
+  const typing = (el) => el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName));
+  addEventListener("keydown", (e) => {
+    if (e.key !== "`" || e.ctrlKey || e.metaKey || e.altKey || typing(e.target)) return;
+    if (window.T39SH && window.T39SH.isOpen()) return;
+    e.preventDefault();
+    openTerminal();
+  });
+  document.querySelectorAll("[data-terminal]").forEach((b) => b.addEventListener("click", (e) => { e.preventDefault(); openTerminal(); }));
+  if (/^#(terminal|t39sh)$/.test(location.hash)) openTerminal();
+  console.log("%c✦ psst: press ` (backtick) on this page.", "color:#00e0c6;font-family:monospace");
+
+  // ---- an old cheat code ----
+  const konami = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+  let kpos = 0;
+  addEventListener("keydown", (e) => {
+    if (typing(e.target)) return;
+    kpos = e.key.toLowerCase() === konami[kpos].toLowerCase() ? kpos + 1 : e.key === "ArrowUp" ? (kpos === 2 ? 2 : 1) : 0;
+    if (kpos === konami.length) {
+      kpos = 0;
+      window.SITE.warp(4000);
+      document.dispatchEvent(new CustomEvent("site:konami"));
+    }
+  });
 
   function tilt(el) {
     if (reduced) return;
