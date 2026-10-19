@@ -1,0 +1,28 @@
+<!doctype html>
+<!-- dev tool: renders assets/og.png (the link-preview image).
+     ~/Desktop/playground/_shared/shot.sh "http://localhost:8039/tools/og.html" assets/og.png 1200,630 -->
+<html lang="en"><head><meta charset="utf-8"><title>og</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: #07070d; }
+  body { font-family: "Space Grotesk", sans-serif; color: #e8e8f0; position: relative; }
+  canvas { position: absolute; inset: 0; }
+  .glow { position: absolute; width: 900px; height: 900px; left: 520px; top: -260px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(124, 92, 255, .28), transparent 62%); }
+  .wrap { position: absolute; left: 96px; top: 150px; }
+  .k { font: 30px "JetBrains Mono", monospace; color: #00e0c6; }
+  h1 { margin: 6px 0 0; font-size: 190px; line-height: 1; letter-spacing: -.045em;
+    background: linear-gradient(120deg, #7c5cff, #00e0c6 55%, #ff4fa3); -webkit-background-clip: text; color: transparent; }
+  p { font-size: 34px; color: #8a8aa3; margin: 22px 0 0; }
+  .url { position: absolute; right: 64px; bottom: 50px; font: 26px "JetBrains Mono", monospace; color: #8a8aa3; }
+</style></head>
+<body>
+<canvas id="c" width="1200" height="630"></canvas><div class="glow"></div>
+<div class="wrap"><div class="k">~/hello-world $</div><h1>ting39</h1><p>projects · blog · a secret terminal ✦</p></div>
+<div class="url">ting39.github.io</div>
+<script>
+  const g = document.getElementById("c").getContext("2d"); let s = 39;
+  const r = () => ((s = (s * 16807) % 2147483647) / 2147483647);
+  for (let i = 0; i < 160; i++) { g.fillStyle = `rgba(232,232,240,${0.15 + r() * 0.6})`; g.beginPath(); g.arc(r() * 1200, r() * 630, r() * 1.6 + 0.3, 0, 7); g.fill(); }
+</script>
+</body></html>
