@@ -274,3 +274,29 @@ footer { text-align: center; padding: 60px 16px 40px; color: var(--muted); font-
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* POSTS (homepage "writing" section and the blog index share these) */
+.post-list { list-style: none; display: grid; gap: 12px; }
+.post-item {
+  display: grid; grid-template-columns: 7.2em 1fr; gap: 6px 18px; padding: 18px 22px;
+  transition: transform .25s, border-color .25s;
+}
+.post-item:hover, .post-item:focus-visible { border-color: var(--a1); transform: translateX(4px); outline: none; }
+.pi-date { color: var(--a2); font-size: .82rem; padding-top: .2em; }
+.pi-main { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.pi-title { font-size: 1.12rem; line-height: 1.35; }
+.pi-sum { color: var(--muted); font-size: .95rem; }
+.pi-meta { color: var(--muted); font-size: .75rem; margin-top: 2px; }
+.post-item:hover .pi-title { color: var(--a2); }
+.more-posts { margin-top: 16px; font-size: .85rem; color: var(--muted); }
+.more-posts a { color: var(--a2); }
+.more-posts a:hover { text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 560px) {
+  .post-item { grid-template-columns: 1fr; padding: 16px 18px; }
+}
+
+.skip {
+  position: fixed; left: 16px; top: -60px; z-index: 50; padding: 8px 14px; border-radius: 8px;
+  background: var(--a1); color: #fff; transition: top .2s;
+}
+.skip:focus { top: 16px; }

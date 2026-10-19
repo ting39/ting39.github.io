@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>ting39 · blog</title>
+  <subtitle>Notes from ting39: things I build, break and learn along the way.</subtitle>
+  <link href="https://ting39.github.io/feed.xml" rel="self"/>
+  <link href="https://ting39.github.io/blog/"/>
+  <id>https://ting39.github.io/blog/</id>
+  <updated>2026-10-20T00:00:00+08:00</updated>
+  <author><name>ting39</name><uri>https://ting39.github.io/</uri></author>
+  <entry>
+    <title>How this site works</title>
+    <link href="https://ting39.github.io/blog/how-this-site-works/"/>
+    <id>https://ting39.github.io/blog/how-this-site-works/</id>
+    <published>2026-10-20T00:00:00+08:00</published>
+    <updated>2026-10-20T00:00:00+08:00</updated>
+    <category term="meta"/>
+    <category term="web"/>
+    <summary>A tour of the moving parts behind ting39.github.io, from the starfield to the secret terminal and this blog.</summary>
+    <content type="html">&lt;p&gt;This site is deliberately small: plain HTML, CSS and JavaScript, served by GitHub Pages,
+with no framework and no build step for the homepage itself. Here is what happens behind
+the page you are reading.&lt;/p&gt;
+&lt;aside class=&quot;callout callout-note&quot;&gt;&lt;p class=&quot;callout-title&quot;&gt;Note&lt;/p&gt;&lt;p&gt;This first post was written by Claude, an AI assistant, while building the site
+with ting39. It's meant as documentation. ting39 can edit it, or hide it by adding
+&lt;code&gt;draft: true&lt;/code&gt; to its front matter.&lt;/p&gt;&lt;/aside&gt;
+&lt;h2 id=&quot;the-homepage&quot;&gt;The homepage&lt;a class=&quot;anchor&quot; href=&quot;#the-homepage&quot; aria-hidden=&quot;true&quot; tabindex=&quot;-1&quot;&gt;#&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The background is a &lt;code&gt;&amp;lt;canvas&amp;gt;&lt;/code&gt; starfield: a few hundred points drifting slowly, with faint
+lines drawn to your cursor when it gets close. Everything else is regular HTML. The project
+cards come from a single file, &lt;code&gt;projects.js&lt;/code&gt;, so adding a project means adding one object:&lt;/p&gt;
+&lt;figure class=&quot;code&quot;&gt;&lt;figcaption&gt;&lt;span class=&quot;code-title&quot;&gt;projects.js&lt;/span&gt;&lt;span class=&quot;code-lang&quot;&gt;js&lt;/span&gt;&lt;/figcaption&gt;&lt;pre data-lang=&quot;js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;tok-builtin&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;tok-punct&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-type&quot;&gt;PROJECTS&lt;/span&gt; &lt;span class=&quot;tok-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;tok-punct&quot;&gt;[&lt;/span&gt;
+  &lt;span class=&quot;tok-punct&quot;&gt;{&lt;/span&gt;
+    title&lt;span class=&quot;tok-operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;tok-string&quot;&gt;&amp;quot;2048: Stellar&amp;quot;&lt;/span&gt;&lt;span class=&quot;tok-punct&quot;&gt;,&lt;/span&gt;
+    description&lt;span class=&quot;tok-operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;tok-string&quot;&gt;&amp;quot;2048 in space.&amp;quot;&lt;/span&gt;&lt;span class=&quot;tok-punct&quot;&gt;,&lt;/span&gt;
+    tags&lt;span class=&quot;tok-operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;tok-punct&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;tok-string&quot;&gt;&amp;quot;game&amp;quot;&lt;/span&gt;&lt;span class=&quot;tok-punct&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;tok-string&quot;&gt;&amp;quot;javascript&amp;quot;&lt;/span&gt;&lt;span class=&quot;tok-punct&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;tok-punct&quot;&gt;,&lt;/span&gt;
+    link&lt;span class=&quot;tok-operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;tok-string&quot;&gt;&amp;quot;https://ting39.github.io/2048/&amp;quot;&lt;/span&gt;&lt;span class=&quot;tok-punct&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;tok-punct&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-punct&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;tok-punct&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;tok-punct&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;h2 id=&quot;music-refreshed-weekly&quot;&gt;Music, refreshed weekly&lt;a class=&quot;anchor&quot; href=&quot;#music-refreshed-weekly&quot; aria-hidden=&quot;true&quot; tabindex=&quot;-1&quot;&gt;#&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The &amp;quot;on repeat&amp;quot; section lists ting39's five most-played songs of the last four weeks.
+A GitHub Action runs every Monday at 08:00 Taiwan time. It asks Spotify's Web API for the
+top tracks and commits the result to &lt;code&gt;spotify.json&lt;/code&gt;, which the page reads. The play buttons
+only load Spotify's embedded player when you press one, so visitors who don't press play
+load nothing from Spotify.&lt;/p&gt;
+&lt;h2 id=&quot;a-terminal-hiding-in-the-page&quot;&gt;A terminal hiding in the page&lt;a class=&quot;anchor&quot; href=&quot;#a-terminal-hiding-in-the-page&quot; aria-hidden=&quot;true&quot; tabindex=&quot;-1&quot;&gt;#&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Press &lt;kbd&gt;`&lt;/kbd&gt; anywhere on the site, or click the &lt;code&gt;&amp;gt;_&lt;/code&gt; in the footer. A small shell slides
+down. Its filesystem is built from the site's own data:&lt;/p&gt;
+&lt;div class=&quot;table-wrap&quot;&gt;&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;path&lt;/th&gt;&lt;th&gt;what's in it&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;~/projects/&lt;/code&gt;&lt;/td&gt;&lt;td&gt;one file per project card&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;~/blog/&lt;/code&gt;&lt;/td&gt;&lt;td&gt;the posts on this blog, as raw Markdown&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;~/music/on-repeat.txt&lt;/code&gt;&lt;/td&gt;&lt;td&gt;the same top 5 as the homepage&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;
+&lt;p&gt;It has history, Tab completion, pipes (&lt;code&gt;history | grep cd&lt;/code&gt;), &lt;code&gt;man&lt;/code&gt; pages, and a few things
+&lt;code&gt;help&lt;/code&gt; doesn't mention. The code is only downloaded the first time you open it.&lt;/p&gt;
+&lt;h2 id=&quot;this-blog&quot;&gt;This blog&lt;a class=&quot;anchor&quot; href=&quot;#this-blog&quot; aria-hidden=&quot;true&quot; tabindex=&quot;-1&quot;&gt;#&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Posts are Markdown files in &lt;code&gt;posts/&lt;/code&gt;. Pushing one triggers another Action that runs a small
+Node script (&lt;code&gt;tools/blog/build.mjs&lt;/code&gt;, no dependencies) to render:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;a page for every post, plus the index and one page per tag,&lt;/li&gt;
+&lt;li&gt;an &lt;a href=&quot;https://ting39.github.io/feed.xml&quot;&gt;Atom feed&lt;/a&gt; and an RSS feed,&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;posts.json&lt;/code&gt;, which the homepage and the terminal read.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Code blocks are highlighted at build time, so pages don't need any extra JavaScript to
+show colours. The output is deterministic: rebuilding without changing a post changes
+nothing, which keeps the commit history clean.&lt;/p&gt;
+&lt;h2 id=&quot;why-keep-it-this-simple&quot;&gt;Why keep it this simple?&lt;a class=&quot;anchor&quot; href=&quot;#why-keep-it-this-simple&quot; aria-hidden=&quot;true&quot; tabindex=&quot;-1&quot;&gt;#&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;A page that is just files keeps working with no maintenance. There are no servers, no
+database and no dependencies to update. When something needs to run, like the weekly
+Spotify refresh or rebuilding the blog, a scheduled GitHub Action does it and commits the
+result. Then the site is plain files again.&lt;/p&gt;</content>
+  </entry>
+</feed>

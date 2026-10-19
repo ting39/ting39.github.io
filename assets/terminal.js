@@ -7,6 +7,9 @@
   if (window.T39SH) return;
 
   const SITE = window.SITE || {};
+  // the site root, so paths work from nested pages like /blog/<post>/ too (this file lives in /assets/)
+  const BASE = new URL("..", (document.currentScript && document.currentScript.src) || location.href);
+  const site = (path) => new URL(path, BASE).href;
   const VERSION = "1.0";
   const USER = "guest", HOST = "ting39", HOME = "/home/ting39";
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -203,12 +206,12 @@ site    plain HTML/CSS/JS on GitHub Pages, no build step for the page
   }
 
   function loadData() {
-    const posting = Promise.resolve(SITE.getPosts ? SITE.getPosts() : fetch("posts.json").then((r) => (r.ok ? r.json() : null)))
+    const posting = Promise.resolve(SITE.getPosts ? SITE.getPosts() : fetch(site("posts.json")).then((r) => (r.ok ? r.json() : null)))
       .then((data) => {
         posts = ((data && data.posts) || []).filter((p) => /^[a-z0-9][a-z0-9-]*$/.test(p.slug || ""));
-        for (const p of posts) home.children.blog.children[p.slug + ".md"] = F(() => fetchText(`posts/${p.slug}.md`), { mtime: new Date(p.date), size: p.bytes });
+        for (const p of posts) home.children.blog.children[p.slug + ".md"] = F(() => fetchText(site(`posts/${p.slug}.md`)), { mtime: new Date(p.date), size: p.bytes });
       }).catch(() => {});
-    const spinning = Promise.resolve(SITE.getSpotify ? SITE.getSpotify() : fetch("spotify.json").then((r) => (r.ok ? r.json() : null)))
+    const spinning = Promise.resolve(SITE.getSpotify ? SITE.getSpotify() : fetch(site("spotify.json")).then((r) => (r.ok ? r.json() : null)))
       .then((data) => {
         if (!data || !(data.tracks || []).length) return;
         music = data;
@@ -221,7 +224,7 @@ site    plain HTML/CSS/JS on GitHub Pages, no build step for the page
   }
 
   // ---------------------------------------------------------------- shell state
-  let cwd = HOME, oldpwd = HOME, status = 0;
+  let cwd = /\/blog\//.test(location.pathname) ? HOME + "/blog" : HOME, oldpwd = HOME, status = 0;
   const env = {
     USER, LOGNAME: USER, HOME, SHELL: "/bin/t39sh", TERM: "xterm-256color", PATH: "/bin", HOSTNAME: HOST,
     LANG: (navigator.language || "en-US").replace("-", "_") + ".UTF-8", EDITOR: "vim", PAGER: "less",
@@ -359,9 +362,9 @@ site    plain HTML/CSS/JS on GitHub Pages, no build step for the page
     const p = projects.find((q) => q.slug === t) || projects.find((q) => q.slug.startsWith(t) || q.title.toLowerCase().startsWith(t));
     if (p && t) return { url: p.link || p.repo, label: p.title, project: p };
     const post = posts.find((q) => q.slug === t);
-    if (post) return { url: post.url || `blog/${post.slug}/`, label: post.title, same: true };
-    if (t === "blog") return { url: "blog/", label: "the blog", same: true };
-    if (t === "rss" || t === "feed") return { url: "feed.xml", label: "the Atom feed", same: true };
+    if (post) return { url: site(post.url || `blog/${post.slug}/`), label: post.title, same: true };
+    if (t === "blog") return { url: site("blog/"), label: "the blog", same: true };
+    if (t === "rss" || t === "feed") return { url: site("feed.xml"), label: "the Atom feed", same: true };
     if (SECTIONS.includes(t) || t === "home") return { section: t === "home" ? "top" : t };
     if (t === "github") return { url: "https://github.com/ting39", label: "ting39 on GitHub" };
     if (t === "source" || t === "repo") return { url: "https://github.com/ting39/ting39.github.io", label: "this site's source" };
@@ -732,7 +735,7 @@ site    plain HTML/CSS/JS on GitHub Pages, no build step for the page
       async run(x) {
         await ready;
         const [sub = "list", arg] = x.args;
-        if (sub === "rss" || sub === "feed") { x.html(`Atom feed: ${link(new URL("feed.xml", location.href).href)}`); return 0; }
+        if (sub === "rss" || sub === "feed") { x.html(`Atom feed: ${link(site("feed.xml"))}`); return 0; }
         if (!posts.length) { x.out("no posts yet. (the blog is warming up.)"); return 0; }
         if (sub === "list" || sub === "ls") {
           const tag = arg;
@@ -742,11 +745,11 @@ site    plain HTML/CSS/JS on GitHub Pages, no build step for the page
           return 0;
         }
         if (sub === "tags") { const n = {}; posts.forEach((p) => (p.tags || []).forEach((t) => (n[t] = (n[t] || 0) + 1))); Object.entries(n).sort((a, b) => b[1] - a[1]).forEach(([t, k]) => x.html(`${c.cyan(pad("#" + t, 16))} ${k}`)); return 0; }
-        if (sub === "latest") return launch(x, { url: posts[0].url || `blog/${posts[0].slug}/`, label: posts[0].title, same: true });
+        if (sub === "latest") return launch(x, { url: site(posts[0].url || `blog/${posts[0].slug}/`), label: posts[0].title, same: true });
         if (sub === "open" || sub === "read") {
           const p = posts.find((q) => q.slug === (arg || "").replace(/\.md$/, ""));
           if (!p) { x.err(`blog: no post called '${arg || ""}'`); return 1; }
-          return launch(x, { url: p.url || `blog/${p.slug}/`, label: p.title, same: true });
+          return launch(x, { url: site(p.url || `blog/${p.slug}/`), label: p.title, same: true });
         }
         x.err(`blog: unknown subcommand '${sub}'`); return 1;
       },

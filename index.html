@@ -6,6 +6,8 @@
   <title>ting39</title>
   <meta name="description" content="ting39 — personal homepage, projects and experiments.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
+  <link rel="alternate" type="application/atom+xml" title="ting39 · blog" href="feed.xml">
+  <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -20,6 +22,7 @@
     <nav>
       <a href="#about">about</a>
       <a href="#projects">projects</a>
+      <a href="#blog" id="blogNav" hidden>blog</a>
       <a href="#music" id="musicNav" hidden>music</a>
       <a href="#contact">contact</a>
     </nav>
@@ -69,6 +72,13 @@
       </div>
     </section>
 
+    <!-- WRITING (latest posts from posts.json, which .github/workflows/blog.yml builds from posts/*.md) -->
+    <section id="blog" class="section reveal" hidden>
+      <h2><span class="num">03.</span> writing</h2>
+      <ol class="post-list" id="latestPosts"></ol>
+      <p class="mono more-posts"><a href="blog/">all posts →</a> · <a href="feed.xml">rss</a></p>
+    </section>
+
     <!-- MUSIC (filled weekly from Spotify by .github/workflows/spotify.yml) -->
     <section id="music" class="section reveal" hidden>
       <h2><span class="num">03.</span> on repeat</h2>
@@ -83,7 +93,7 @@
 
     <!-- CONTACT -->
     <section id="contact" class="section reveal">
-      <h2><span class="num" id="contactNum">03.</span> contact</h2>
+      <h2><span class="num">03.</span> contact</h2>
       <div class="card contact">
         <p>Want to collaborate, or just say hello?</p>
         <div class="links">

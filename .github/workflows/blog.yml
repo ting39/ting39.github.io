@@ -1,0 +1,64 @@
+name: Build blog
+
+# Renders posts/*.md into blog/, posts.json, feed.xml, rss.xml and sitemap.xml, then commits them.
+# Only runs when posts or the builder change, and its own commit (made with GITHUB_TOKEN)
+# doesn't trigger workflows, so it can't loop. It never touches spotify.json.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "posts/**"
+      - "tools/blog/**"
+      - "assets/blog.css"
+      - "assets/blog.js"
+      - "style.css"
+      - ".github/workflows/blog.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: blog
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Test the builder
+        run: node --test 'tools/blog/test/*.test.mjs'
+
+      - name: Build
+        run: node tools/blog/build.mjs
+
+      - name: Commit if changed
+        id: commit
+        run: |
+          git add -A blog posts.json feed.xml rss.xml sitemap.xml
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Build blog"
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push && break
+            sleep 5
+          done
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # Pushes made with GITHUB_TOKEN may not trigger a Pages rebuild, so request one.
+      - name: Rebuild Pages
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds" || true

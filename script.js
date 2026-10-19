@@ -142,6 +142,36 @@
     document.getElementById("emptyState").hidden = false;
   }
 
+  // sections are numbered 01., 02., … in order, skipping hidden ones (writing/music appear once their data loads)
+  function renumber() {
+    let n = 1;
+    document.querySelectorAll("main .section").forEach((s) => {
+      const num = s.querySelector(".num");
+      if (num && !s.hidden) num.textContent = String(n++).padStart(2, "0") + ".";
+    });
+  }
+
+  // ---- writing: latest posts (posts.json is built from posts/*.md by a GitHub Action) ----
+  let postsP = null;
+  const getPosts = () => (postsP ||= fetch("posts.json", { cache: "no-cache" }).then((r) => (r.ok ? r.json() : null)).catch(() => null));
+  getPosts().then((data) => {
+    const posts = ((data && data.posts) || []).filter((p) => /^[a-z0-9-]+$/.test(p.slug || "")).slice(0, 3);
+    if (!posts.length) return;
+    document.getElementById("latestPosts").innerHTML = posts.map((p) => `<li><a class="card post-item" href="blog/${p.slug}/">
+        <time class="pi-date mono" datetime="${esc(p.date)}">${esc(p.date)}</time>
+        <span class="pi-main">
+          <b class="pi-title">${esc(p.title)}</b>
+          <span class="pi-sum">${esc(p.summary)}</span>
+          <span class="pi-meta mono">${esc(p.readingTime)} min read${(p.tags || []).length ? " · " + p.tags.map((t) => "#" + esc(t)).join(" ") : ""}</span>
+        </span>
+      </a></li>`).join("");
+    const sec = document.getElementById("blog");
+    sec.hidden = false;
+    document.getElementById("blogNav").hidden = false;
+    renumber();
+    io.observe(sec); navIO.observe(sec);
+  });
+
   // ---- music: top 5 from Spotify (spotify.json is refreshed weekly by a GitHub Action) ----
   const safeUrl = (u) => (/^https:\/\//.test(u || "") ? u : null);
   const spotifyP = fetch("spotify.json", { cache: "no-cache" })
@@ -173,7 +203,7 @@
       const sec = document.getElementById("music");
       sec.hidden = false;
       document.getElementById("musicNav").hidden = false;
-      document.getElementById("contactNum").textContent = "04.";
+      renumber();
       io.observe(sec); navIO.observe(sec);
     })
     .catch(() => {});
@@ -248,7 +278,6 @@
   }
 
   // ---- shared API for the terminal and the pet (both load lazily) ----
-  let postsP = null;
   window.SITE = {
     setTheme,
     scrollTo(id) {
@@ -257,14 +286,14 @@
     },
     warp(ms = 3000) { if (!reduced) warpUntil = performance.now() + ms; },
     getSpotify: () => spotifyP,
-    getPosts: () => (postsP ||= fetch("posts.json", { cache: "no-cache" }).then((r) => (r.ok ? r.json() : null)).catch(() => null)),
+    getPosts,
     playTrack: (i) => !!player && player.play(i),
     togglePlay: () => !!player && player.toggle(),
     nowPlaying: () => (player ? player.state() : null),
   };
 
   // ---- secret terminal: ` (or the >_ in the footer, or #terminal) opens it; code loads on first use ----
-  const TERM_V = "1";
+  const TERM_V = "2"; // bump when assets/terminal.* change (also in assets/blog.js)
   let termP = null;
   const load = (tag, attrs) => new Promise((res, rej) => {
     const el = Object.assign(document.createElement(tag), attrs);
