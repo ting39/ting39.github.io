@@ -20,6 +20,7 @@
     <nav>
       <a href="#about">about</a>
       <a href="#projects">projects</a>
+      <a href="#music" id="musicNav" hidden>music</a>
       <a href="#contact">contact</a>
     </nav>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">◐</button>
@@ -68,9 +69,17 @@
       </div>
     </section>
 
+    <!-- MUSIC (filled weekly from Spotify by .github/workflows/spotify.yml) -->
+    <section id="music" class="section reveal" hidden>
+      <h2><span class="num">03.</span> on repeat</h2>
+      <p class="muted music-sub">My most-played songs on Spotify over the last 4 weeks.</p>
+      <ol class="tracks" id="tracks"></ol>
+      <p class="mono music-foot"><span class="spotify-dot"></span> via <a href="https://open.spotify.com" target="_blank" rel="noopener">Spotify</a> · updated weekly · last <span id="musicUpdated"></span></p>
+    </section>
+
     <!-- CONTACT -->
     <section id="contact" class="section reveal">
-      <h2><span class="num">03.</span> contact</h2>
+      <h2><span class="num" id="contactNum">03.</span> contact</h2>
       <div class="card contact">
         <p>Want to collaborate, or just say hello?</p>
         <div class="links">

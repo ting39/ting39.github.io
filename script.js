@@ -127,6 +127,32 @@
     document.getElementById("emptyState").hidden = false;
   }
 
+  // ---- music: top 5 from Spotify (spotify.json is refreshed weekly by a GitHub Action) ----
+  const safeUrl = (u) => (/^https:\/\//.test(u || "") ? u : null);
+  fetch("spotify.json", { cache: "no-cache" })
+    .then((r) => (r.ok ? r.json() : null))
+    .then((data) => {
+      const tracks = (data && data.tracks) || [];
+      if (!tracks.length) return;
+      document.getElementById("tracks").innerHTML = tracks.map((t, i) => {
+        const url = safeUrl(t.url), img = safeUrl(t.image);
+        const tag = url ? `a href="${esc(url)}" target="_blank" rel="noopener"` : "div";
+        return `<li><${tag} class="card track">
+          <span class="rank">${i + 1}</span>
+          ${img ? `<img src="${esc(img)}" alt="" loading="lazy" width="64" height="64">` : `<span class="noart">♪</span>`}
+          <span class="meta"><b>${esc(t.name)}</b><small>${esc(t.artists)}</small></span>
+          <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
+        </${tag.split(" ")[0]}></li>`;
+      }).join("");
+      document.getElementById("musicUpdated").textContent = data.updated || "";
+      const sec = document.getElementById("music");
+      sec.hidden = false;
+      document.getElementById("musicNav").hidden = false;
+      document.getElementById("contactNum").textContent = "04.";
+      io.observe(sec); navIO.observe(sec);
+    })
+    .catch(() => {});
+
   function tilt(el) {
     if (reduced) return;
     el.addEventListener("pointermove", (e) => {
