@@ -13,6 +13,9 @@ Personal homepage. Plain HTML/CSS/JS with no build step.
   Action renders `blog/`, `posts.json`, `feed.xml`, `rss.xml` and `sitemap.xml`.
   The builder is `tools/blog/` (no dependencies; tests: `node --test 'tools/blog/test/*.test.mjs'`).
   If you change `assets/terminal.*`, bump `TERM_V` in `script.js` and `assets/blog.js`.
+- `assets/pet.js` + `.css`: the homepage pet, loaded when the page is idle. Drawn in code on a
+  16×16 grid; state lives in `localStorage` (`pet.v1`). Terminal: `pet status`. Dev helpers:
+  `?petday` (skip night-time sleep), `tools/pet-sheet.html?petsheet&petday` (every sprite pose).
 - `.nojekyll` makes GitHub Pages serve files as-is (no Jekyll processing)
 
 Preview locally: `python3 -m http.server 8000`, then open http://localhost:8000
