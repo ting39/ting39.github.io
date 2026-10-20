@@ -1,6 +1,7 @@
 <!doctype html>
-<!-- dev tool: renders assets/og.png (the link-preview image).
-     ~/Desktop/playground/_shared/shot.sh "http://localhost:8039/tools/og.html" assets/og.png 1200,630 -->
+<!-- dev tool: renders 1200×630 link-preview images.
+     Homepage: shot.sh "http://localhost:8039/tools/og.html" assets/og.png 1200,630
+     Projects: add ?k=kicker&t=title&s=subtitle&i=icon&u=url&a=accent1&b=accent2 (colours without #) -->
 <html lang="en"><head><meta charset="utf-8"><title>og</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
@@ -12,15 +13,24 @@
   .wrap { position: absolute; left: 96px; top: 150px; }
   .k { font: 30px "JetBrains Mono", monospace; color: #00e0c6; }
   h1 { margin: 6px 0 0; font-size: 190px; line-height: 1; letter-spacing: -.045em;
-    background: linear-gradient(120deg, #7c5cff, #00e0c6 55%, #ff4fa3); -webkit-background-clip: text; color: transparent; }
+    background: linear-gradient(120deg, var(--c1, #7c5cff), var(--c2, #00e0c6) 55%, #ff4fa3); -webkit-background-clip: text; color: transparent; }
   p { font-size: 34px; color: #8a8aa3; margin: 22px 0 0; }
+  .icon { position: absolute; right: 90px; top: 120px; font-size: 230px; line-height: 1; filter: drop-shadow(0 20px 60px rgba(124,92,255,.45)); }
   .url { position: absolute; right: 64px; bottom: 50px; font: 26px "JetBrains Mono", monospace; color: #8a8aa3; }
 </style></head>
 <body>
 <canvas id="c" width="1200" height="630"></canvas><div class="glow"></div>
 <div class="wrap"><div class="k">~/hello-world $</div><h1>ting39</h1><p>projects · blog · a secret terminal ✦</p></div>
-<div class="url">ting39.github.io</div>
+<div class="url">ting39.github.io</div><div class="icon"></div>
 <script>
+  const q = new URLSearchParams(location.search), set = (sel, v) => { if (v) document.querySelector(sel).textContent = v; };
+  set(".k", q.get("k")); set("h1", q.get("t")); set("p", q.get("s")); set(".url", q.get("u")); set(".icon", q.get("i"));
+  if (q.get("a")) document.documentElement.style.setProperty("--c1", "#" + q.get("a"));
+  if (q.get("b")) document.documentElement.style.setProperty("--c2", "#" + q.get("b"));
+  // shrink the title until it fits (beside the icon, if there is one)
+  const h1 = document.querySelector("h1"), room = q.get("i") ? 700 : 1010;
+  h1.style.display = "inline-block";
+  for (let fs = 190; h1.getBoundingClientRect().width > room && fs > 60; fs -= 4) h1.style.fontSize = fs + "px";
   const g = document.getElementById("c").getContext("2d"); let s = 39;
   const r = () => ((s = (s * 16807) % 2147483647) / 2147483647);
   for (let i = 0; i < 160; i++) { g.fillStyle = `rgba(232,232,240,${0.15 + r() * 0.6})`; g.beginPath(); g.arc(r() * 1200, r() * 630, r() * 1.6 + 0.3, 0, 7); g.fill(); }
