@@ -11,6 +11,14 @@
 // },
 window.PROJECTS = [
   {
+    title: "Little Poet",
+    description: "A 1.4M-parameter GPT trained from scratch on 21k Tang poems, running in plain JS in your browser. Click any character to see its attention heads, probabilities and embeddings.",
+    tags: ["ml", "transformer", "visualization", "javascript"],
+    link: "https://ting39.github.io/tinygpt/",
+    repo: "https://github.com/ting39/tinygpt",
+    emoji: "🖌️"
+  },
+  {
     title: "Eighth Segment",
     description: "A hard, minimal precision platformer. You are the decimal point; lit segments are solid, and every number in the machine is counting something. Move + jump only — progress comes from figuring out what the numbers mean.",
     tags: ["game", "platformer", "puzzle", "canvas", "web audio"],
