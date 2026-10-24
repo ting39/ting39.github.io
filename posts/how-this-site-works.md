@@ -23,10 +23,10 @@ cards come from a single file, `projects.js`, so adding a project means adding o
 ```js title="projects.js"
 window.PROJECTS = [
   {
-    title: "2048: Stellar",
-    description: "2048 in space.",
-    tags: ["game", "javascript"],
-    link: "https://ting39.github.io/2048/",
+    title: "Gatewright",
+    description: "From one NAND gate to a CPU.",
+    tags: ["game", "logic"],
+    link: "https://ting39.github.io/gatewright/",
   },
 ];
 ```

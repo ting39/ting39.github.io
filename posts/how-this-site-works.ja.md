@@ -21,10 +21,10 @@ summary: ting39.github.io を支える部品をひととおり紹介します。
 ```js title="projects.js"
 window.PROJECTS = [
   {
-    title: "2048: Stellar",
-    description: "2048 in space.",
-    tags: ["game", "javascript"],
-    link: "https://ting39.github.io/2048/",
+    title: "Gatewright",
+    description: "From one NAND gate to a CPU.",
+    tags: ["game", "logic"],
+    link: "https://ting39.github.io/gatewright/",
   },
 ];
 ```

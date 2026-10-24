@@ -689,7 +689,7 @@ site    plain HTML/CSS/JS on GitHub Pages, no build step for the page
     open: {
       group: "site", desc: "open a project, post, section or URL", usage: "open <project | post | section | url>",
       complete: () => [...projects.map((p) => p.slug), ...posts.map((p) => p.slug), ...SECTIONS, "blog", "github", "source"],
-      ex: ["open 2048", "open music", "open blog", "open github"],
+      ex: ["open gatewright", "open music", "open blog", "open github"],
       async run(x) {
         await ready;
         const t = x.args[0];

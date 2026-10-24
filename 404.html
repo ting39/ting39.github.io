@@ -77,7 +77,7 @@
       const path = decodeURIComponent(location.pathname);
       document.getElementById("path").textContent = path;
       // suggest the closest real page for typos like /2o48 or /gatewrite
-      const pages = { "/": "the homepage", "/blog/": "the blog", "/2048/": "2048: Stellar", "/gatewright/": "Gatewright", "/eighth-segment/": "Eighth Segment", "/tinygpt/": "Little Poet" };
+      const pages = { "/": "the homepage", "/blog/": "the blog", "/gatewright/": "Gatewright", "/eighth-segment/": "Eighth Segment" };
       const lev = (a, b) => {
         const d = Array.from({ length: a.length + 1 }, (_, i) => [i]);
         for (let j = 1; j <= b.length; j++) d[0][j] = j;
