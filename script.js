@@ -1,5 +1,9 @@
 (() => {
   const root = document.documentElement;
+  // ---- language (assets/i18n.js) ----
+  I18N.switcher(document.getElementById("langSwitch"));
+  I18N.apply(document);
+  I18N.onChange(() => { loadPhrases(); });
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // ---- theme ----
@@ -19,16 +23,14 @@
   document.getElementById("footYear").textContent = y;
 
   // ---- typewriter ----
-  const phrases = [
-    "building things on the internet.",
-    "learning in public.",
-    "currently: setting up the playground.",
-    "projects loading…",
-  ];
+  const T = (k, v) => (window.I18N ? I18N.t(k, v) : k);
+  let phrases = [];
+  const loadPhrases = () => { phrases = [1, 2, 3, 4].map((n) => T("typed." + n)); };
+  loadPhrases();
   const typed = document.getElementById("typed");
   let p = 0, i = 0, del = false;
   (function type() {
-    const s = phrases[p];
+    const s = phrases[p % phrases.length];
     typed.textContent = s.slice(0, i);
     if (!del && i < s.length) i++;
     else if (del && i > 0) i--;
@@ -120,24 +122,29 @@
       <article class="card project">
         <div class="emoji">${esc(p.emoji || "✦")}</div>
         <h3>${esc(p.title)}</h3>
-        <p>${esc(p.description)}</p>
+        <p>${esc((p.i18n && p.i18n[I18N.lang] && p.i18n[I18N.lang].description) || p.description)}</p>
         <div class="tags">${(p.tags || []).map((t) => `<span>#${esc(t)}</span>`).join("")}</div>
         <div class="plinks">
-          ${p.link ? `<a href="${esc(p.link)}" target="_blank" rel="noopener">live ↗</a>` : ""}
-          ${p.repo ? `<a href="${esc(p.repo)}" target="_blank" rel="noopener">code ↗</a>` : ""}
+          ${p.link ? `<a href="${esc(p.link)}" target="_blank" rel="noopener">${T("projects.live")}</a>` : ""}
+          ${p.repo ? `<a href="${esc(p.repo)}" target="_blank" rel="noopener">${T("projects.code")}</a>` : ""}
         </div>
       </article>`).join("");
     grid.querySelectorAll(".project").forEach(tilt);
   }
   if (projects.length) {
     const tags = [...new Set(projects.flatMap((p) => p.tags || []))];
-    filters.innerHTML = ["all", ...tags].map((t, k) => `<button class="${k ? "" : "on"}" data-t="${esc(t)}">${esc(t)}</button>`).join("");
+    filters.innerHTML = ["all", ...tags].map((t, k) => `<button class="${k ? "" : "on"}" data-t="${esc(t)}">${esc(k ? t : T("projects.all"))}</button>`).join("");
     filters.addEventListener("click", (e) => {
       const b = e.target.closest("button"); if (!b) return;
       filters.querySelectorAll("button").forEach((x) => x.classList.toggle("on", x === b));
       render(b.dataset.t === "all" ? null : b.dataset.t);
     });
     render(null);
+    I18N.onChange(() => {
+      const on = filters.querySelector("button.on");
+      filters.querySelector('button[data-t="all"]').textContent = T("projects.all");
+      render(on && on.dataset.t !== "all" ? on.dataset.t : null);
+    });
   } else {
     document.getElementById("emptyState").hidden = false;
   }
@@ -154,17 +161,19 @@
   // ---- writing: latest posts (posts.json is built from posts/*.md by a GitHub Action) ----
   let postsP = null;
   const getPosts = () => (postsP ||= fetch("posts.json", { cache: "no-cache" }).then((r) => (r.ok ? r.json() : null)).catch(() => null));
+  const loc = (p, f) => (p.i18n && p.i18n[I18N.lang] && p.i18n[I18N.lang][f]) || p[f];
   getPosts().then((data) => {
     const posts = ((data && data.posts) || []).filter((p) => /^[a-z0-9-]+$/.test(p.slug || "")).slice(0, 3);
     if (!posts.length) return;
-    document.getElementById("latestPosts").innerHTML = posts.map((p) => `<li><a class="card post-item" href="blog/${p.slug}/">
+    const draw = () => { document.getElementById("latestPosts").innerHTML = posts.map((p) => `<li><a class="card post-item" href="blog/${p.slug}/">
         <time class="pi-date mono" datetime="${esc(p.date)}">${esc(p.date)}</time>
         <span class="pi-main">
-          <b class="pi-title">${esc(p.title)}</b>
-          <span class="pi-sum">${esc(p.summary)}</span>
-          <span class="pi-meta mono">${esc(p.readingTime)} min read${(p.tags || []).length ? " · " + p.tags.map((t) => "#" + esc(t)).join(" ") : ""}</span>
+          <b class="pi-title">${esc(loc(p, "title"))}</b>
+          <span class="pi-sum">${esc(loc(p, "summary"))}</span>
+          <span class="pi-meta mono">${esc(T("blog.min", { n: p.readingTime }))}${(p.tags || []).length ? " · " + p.tags.map((t) => "#" + esc(t)).join(" ") : ""}</span>
         </span>
-      </a></li>`).join("");
+      </a></li>`).join(""); };
+    draw(); I18N.onChange(draw);
     const sec = document.getElementById("blog");
     sec.hidden = false;
     document.getElementById("blogNav").hidden = false;
@@ -186,13 +195,13 @@
         const url = safeUrl(t.url), img = safeUrl(t.image);
         const id = ((url || "").match(/open\.spotify\.com\/track\/([A-Za-z0-9]+)/) || [])[1];
         const title = url
-          ? `<a href="${esc(url)}" target="_blank" rel="noopener" title="Open in Spotify"><b>${esc(t.name)}</b></a>`
+          ? `<a href="${esc(url)}" target="_blank" rel="noopener" title="${esc(T("music.open"))}"><b>${esc(t.name)}</b></a>`
           : `<b>${esc(t.name)}</b>`;
         return `<li><div class="card track">
           <span class="rank">${i + 1}</span>
           <span class="art">
             ${img ? `<img src="${esc(img)}" alt="" loading="lazy" width="64" height="64">` : `<span class="noart">♪</span>`}
-            ${id ? `<button class="play" data-id="${id}" aria-label="Play ${esc(t.name)}"><span class="ico">▶</span></button>` : ""}
+            ${id ? `<button class="play" data-id="${id}" aria-label="${esc(T("music.play", { name: t.name }))}"><span class="ico">▶</span></button>` : ""}
           </span>
           <span class="meta">${title}<small>${esc(t.artists)}</small></span>
           <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
@@ -223,7 +232,7 @@
         row.classList.toggle("playing", on && !paused);
         if (btn) {
           btn.querySelector(".ico").textContent = on && !paused ? "❚❚" : "▶";
-          btn.setAttribute("aria-label", (on && !paused ? "Pause " : "Play ") + row.querySelector("b").textContent);
+          btn.setAttribute("aria-label", T(on && !paused ? "music.pause" : "music.play", { name: row.querySelector("b").textContent }));
         }
       });
       // the homepage pet dances along; the terminal shows what's playing
@@ -252,7 +261,7 @@
       s.id = "spotify-iframe-api";
       s.src = "https://open.spotify.com/embed/iframe-api/v1";
       s.async = true;
-      s.onerror = () => { box.querySelector(".player-slot").textContent = "Couldn't load the Spotify player. Try the song links instead."; };
+      s.onerror = () => { box.querySelector(".player-slot").textContent = T("music.fail"); };
       document.body.appendChild(s);
     };
 
@@ -293,7 +302,7 @@
   };
 
   // ---- secret terminal: ` (or the >_ in the footer, or #terminal) opens it; code loads on first use ----
-  const TERM_V = "2"; // bump when assets/terminal.* change (also in assets/blog.js)
+  const TERM_V = "3"; // bump when assets/terminal.* change (also in assets/blog.js)
   let termP = null;
   const load = (tag, attrs) => new Promise((res, rej) => {
     const el = Object.assign(document.createElement(tag), attrs);
@@ -304,6 +313,7 @@
     if (window.T39SH) return window.T39SH.open(cmd);
     termP ||= Promise.all([
       load("link", { rel: "stylesheet", href: `assets/terminal.css?v=${TERM_V}` }),
+      load("script", { src: `assets/terminal-i18n.js?v=${TERM_V}` }),
       load("script", { src: `assets/terminal.js?v=${TERM_V}` }),
     ]).catch((e) => { termP = null; throw e; });
     termP.then(() => window.T39SH.open(cmd)).catch(() => {});

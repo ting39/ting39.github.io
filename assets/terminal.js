@@ -7,6 +7,11 @@
   if (window.T39SH) return;
 
   const SITE = window.SITE || {};
+  // translations (assets/terminal-i18n.js); commands, flags and paths stay English like a real shell
+  const LANG = () => (window.I18N ? I18N.lang : "en");
+  const L = (s) => { const d = window.TERM_I18N && TERM_I18N[LANG()]; return (d && typeof s === "string" && d[s]) || s; };
+  const LT = (key, en, vars) => { const d = window.TERM_I18N && TERM_I18N[LANG()]; let t = (d && d["tpl:" + key]) || en; for (const k in vars || {}) t = t.split("{" + k + "}").join(vars[k]); return t; };
+  const LF = (name, en) => () => { const d = window.TERM_I18N && TERM_I18N[LANG()]; return (d && d["file:" + name]) || en; };
   // the site root, so paths work from nested pages like /blog/<post>/ too (this file lives in /assets/)
   const BASE = new URL("..", (document.currentScript && document.currentScript.src) || location.href);
   const site = (path) => new URL(path, BASE).href;
@@ -86,7 +91,7 @@
   let posts = [], music = null;
 
   const projectText = (p) => [
-    `# ${p.emoji ? p.emoji + " " : ""}${p.title}`, "", p.description || "", "",
+    `# ${p.emoji ? p.emoji + " " : ""}${p.title}`, "", (p.i18n && p.i18n[LANG()] && p.i18n[LANG()].description) || p.description || "", "",
     `tags:  ${(p.tags || []).join(", ") || "-"}`,
     p.link ? `live:  ${p.link}` : null, p.repo ? `code:  ${p.repo}` : null, "",
     `run \`open ${p.slug}\` to launch it.`,
@@ -113,7 +118,7 @@
     }),
     home: D({
       ting39: D({
-        "README.md": F(`# welcome to ting39's home directory 👋
+        "README.md": F(LF("README.md", `# welcome to ting39's home directory 👋
 
   about.txt      who's this
   projects/      things I've built    → open <name>
@@ -122,8 +127,8 @@
   contact.txt    say hi
 
 There are hidden files too. \`ls\` has a flag for that.
-`),
-        "about.txt": F(`ting39
+`)),
+        "about.txt": F(LF("about.txt", `ting39
 ======
 Hi, I'm ting39. This is my corner of the internet: a place for the
 things I build, break and learn along the way.
@@ -133,7 +138,7 @@ likes   rhythm games and their music (lapix, Nhato, t+pazolite),
         computer science and machine learning
 site    plain HTML/CSS/JS on GitHub Pages, no build step for the page
         itself. You are currently inside it.
-`),
+`)),
         "contact.txt": F("GitHub   https://github.com/ting39\n"),
         projects: D(),
         blog: D(),
@@ -420,7 +425,7 @@ site    plain HTML/CSS/JS on GitHub Pages, no build step for the page
         if (x.args[0]) return exec(["man", x.args[0]], x);
         const groups = {};
         for (const [name, cmd] of Object.entries(COMMANDS)) if (!cmd.hidden) (groups[cmd.group] ||= []).push(name);
-        x.html(`${c.bold("t39sh " + VERSION)} ${c.dim("— ting39's terminal. Commands:")}`);
+        x.html(`${c.bold("t39sh " + VERSION)} ${c.dim(L("— ting39's terminal. Commands:"))}`);
         x.out("");
         const room = Math.max(24, x.cols - 11);
         for (const g of ["files", "site", "text", "system", "fun"]) {
@@ -431,9 +436,9 @@ site    plain HTML/CSS/JS on GitHub Pages, no build step for the page
           rows.forEach((r, i) => x.html(`  ${i ? " ".repeat(8) : c.accent(pad(g, 8))} ${r.map((n) => c.green(n)).join("  ")}`));
         }
         x.out("");
-        x.html(c.dim("  keys  Tab complete · ↑↓ history · Ctrl+R search · Ctrl+L clear · Ctrl+C cancel · Esc close"));
-        x.html(c.dim("  try   ") + ["neofetch", "cat about.txt", "spotify play 1", "man ls"].map((s) => c.yellow(s)).join(c.dim(" · ")));
-        x.html(c.dim("  (a few things here aren't listed. curiosity is rewarded.)"));
+        x.html(c.dim(L("  keys  Tab complete · ↑↓ history · Ctrl+R search · Ctrl+L clear · Ctrl+C cancel · Esc close")));
+        x.html(c.dim(L("  try   ")) + ["neofetch", "cat about.txt", "spotify play 1", "man ls"].map((s) => c.yellow(s)).join(c.dim(" · ")));
+        x.html(c.dim(L("  (a few things here aren't listed. curiosity is rewarded.)")));
       },
     },
     man: {
@@ -444,20 +449,20 @@ site    plain HTML/CSS/JS on GitHub Pages, no build step for the page
         if (!name) { x.err("What manual page do you want?\nFor example, try 'man ls'."); return 1; }
         if (name === "man") { x.out("man: a manual for manuals. you're using it right now. 📖"); return 0; }
         const cmd = COMMANDS[name] || (aliases[name] && COMMANDS[aliases[name].split(" ")[0]]);
-        if (!cmd || cmd.hidden) { x.err(`No manual entry for ${name}`); return 16; }
+        if (!cmd || cmd.hidden) { x.err(LT("noman", `No manual entry for ${name}`, { n: name })); return 16; }
         const title = `${name.toUpperCase()}(1)`;
         const gap = " ".repeat(Math.max(2, Math.floor((Math.min(x.cols, 64) - 2 * title.length - 12) / 2)));
-        x.pre(`${c.bold(title)}${gap}${c.dim("t39sh manual")}${gap}${c.bold(title)}`);
+        x.pre(`${c.bold(title)}${gap}${c.dim(L("t39sh manual"))}${gap}${c.bold(title)}`);
         x.out("");
         x.html(c.bold("NAME"));
-        x.out(`       ${name} - ${cmd.desc}${aliases[name] ? `  (alias for '${aliases[name]}')` : ""}`);
+        x.out(`       ${name} - ${L(cmd.desc)}${aliases[name] ? "  " + LT("alias", `(alias for '${aliases[name]}')`, { a: `'${aliases[name]}'` }) : ""}`);
         x.out("");
         x.html(c.bold("SYNOPSIS"));
         x.html(`       ${c.green(cmd.usage || name)}`);
         if (cmd.man) {
           x.out("");
           x.html(c.bold("DESCRIPTION"));
-          for (const l of cmd.man.split("\n")) x.out("       " + l);
+          for (const l of L(cmd.man).split("\n")) x.out("       " + l);
         }
         if (cmd.ex) {
           x.out("");
@@ -723,7 +728,7 @@ site    plain HTML/CSS/JS on GitHub Pages, no build step for the page
         if (!list.length) { x.out(tag ? `no projects tagged #${tag}` : "no projects yet."); return tag ? 1 : 0; }
         for (const p of list) {
           x.html(`${esc(p.emoji || "✦")} ${c.bold(p.title)} ${c.dim("(" + p.slug + ")")}`);
-          x.out("   " + (p.description || ""));
+          x.out("   " + ((p.i18n && p.i18n[LANG()] && p.i18n[LANG()].description) || p.description || ""));
           x.html("   " + (p.tags || []).map((t) => c.cyan("#" + t)).join(" ") + (p.link ? "  " + link(p.link, "live ↗") : "") + (p.repo ? "  " + link(p.repo, "code ↗") : ""));
         }
         x.html(c.dim(`${plural(list.length, "project")} · open one with \`open <name>\``));
@@ -1446,10 +1451,10 @@ site    plain HTML/CSS/JS on GitHub Pages, no build step for the page
       const sink = tty ? (h) => emit(h) : (h, t) => { for (const l of String(t).split("\n")) buf.push(l); if (buf.length > 5000) stage.abort(); };
       const x = {
         stdin, signal: stage.signal, tty,
-        out: (t = "") => String(t).split("\n").forEach((l) => sink(linkify(l), l)),
+        out: (t = "") => String(tty ? L(t) : t).split("\n").forEach((l) => sink(linkify(l), l)),
         html: (h) => sink(h, toText(h)),
         pre: (h) => (tty ? emit(h, "t39-pre") : sink(h, toText(h))),
-        err: (t) => String(t).split("\n").forEach((l) => emit(span("red", l))),
+        err: (t) => String(L(t)).split("\n").forEach((l) => emit(span("red", l))),
         screen: () => { if (!tty) return null; const d = document.createElement("div"); d.className = "t39-ln t39-pre t39-screen"; outEl.appendChild(d); scrollDown(); return d; },
         readLine: (prompt, o) => readLine(prompt, o || {}, stage.signal),
         onKey: (fn) => { keyHook = fn; },
@@ -1805,9 +1810,9 @@ site    plain HTML/CSS/JS on GitHub Pages, no build step for the page
   function motdText() {
     const b = browserInfo();
     return [
-      `t39sh ${VERSION} · ting39's terminal`,
-      "Type help to look around, Tab to complete, Esc to leave.",
-      lastLogin ? `Last login: ${fmtDate(new Date(lastLogin))} on ${b.browser}` : `First login. Welcome, ${USER}!`,
+      LT("motd1", `t39sh ${VERSION} · ting39's terminal`, { v: VERSION }),
+      L("Type help to look around, Tab to complete, Esc to leave."),
+      lastLogin ? LT("last", `Last login: ${fmtDate(new Date(lastLogin))} on ${b.browser}`, { d: fmtDate(new Date(lastLogin)), b: b.browser }) : LT("first", `First login. Welcome, ${USER}!`, { u: USER }),
     ];
   }
   function motd() {

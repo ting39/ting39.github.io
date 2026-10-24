@@ -20,30 +20,31 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../style.css?v=5140fa63">
-  <link rel="stylesheet" href="../assets/blog.css?v=5140fa63">
+  <link rel="stylesheet" href="../style.css?v=33f9f69d">
+  <link rel="stylesheet" href="../assets/blog.css?v=33f9f69d">
 </head>
 <body class="blog-page">
   <canvas id="sky" aria-hidden="true"></canvas>
-  <a class="skip" href="#content">Skip to content</a>
+  <a class="skip" href="#content" data-i18n="blog.skip">Skip to content</a>
   <header class="nav">
     <a class="logo" href="../">ting39<span class="blink">_</span></a>
     <nav aria-label="Site">
-      <a href="../#about">about</a>
-      <a href="../#projects">projects</a>
-      <a href="../blog/" class="active" aria-current="page">blog</a>
-      <a href="../#contact">contact</a>
+      <a href="../#about" data-i18n="nav.about">about</a>
+      <a href="../#projects" data-i18n="nav.projects">projects</a>
+      <a href="../blog/" class="active" aria-current="page" data-i18n="nav.blog">blog</a>
+      <a href="../#contact" data-i18n="nav.contact">contact</a>
     </nav>
-    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle light/dark theme">◐</button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle light/dark theme" data-i18n-attr="aria-label:nav.theme">◐</button>
+    <div id="langSwitch"></div>
   </header>
 
   <main id="content" class="blog-main">
     <header class="blog-head">
       <p class="mono kicker">~/blog $ ls -t</p>
-      <h1>blog</h1>
-      <p class="muted">Notes from ting39: things I build, break and learn along the way. <a class="feed-link mono" href="../feed.xml">rss ↗</a></p>
+      <h1 data-i18n="blog.h">blog</h1>
+      <p class="muted"><span data-i18n="blog.desc">Notes from ting39: things I build, break and learn along the way.</span> <a class="feed-link mono" href="../feed.xml">rss ↗</a></p>
       <nav class="filters tag-chips" aria-label="Tags">
-      <a href="../blog/" class="on" aria-current="page">all</a>
+      <a href="../blog/" class="on" aria-current="page" data-i18n="projects.all">all</a>
       <a href="../blog/tags/meta/">#meta <small>1</small></a>
       <a href="../blog/tags/web/">#web <small>1</small></a>
     </nav>
@@ -53,19 +54,21 @@
       <li><a class="card post-item" href="../blog/how-this-site-works/">
         <time class="pi-date mono" datetime="2026-10-20">2026-10-20</time>
         <span class="pi-main">
-          <b class="pi-title">How this site works</b>
-          <span class="pi-sum">A tour of the moving parts behind ting39.github.io, from the starfield to the secret terminal and this blog.</span>
-          <span class="pi-meta mono">2 min read · #meta #web</span>
+          <b class="pi-title"><span data-lang-block="en" lang="en">How this site works</span><span data-lang-block="zh-TW" lang="zh-Hant-TW" hidden>這個網站是怎麼運作的</span><span data-lang-block="ja" lang="ja" hidden>このサイトのしくみ</span></b>
+          <span class="pi-sum"><span data-lang-block="en" lang="en">A tour of the moving parts behind ting39.github.io, from the starfield to the secret terminal and this blog.</span><span data-lang-block="zh-TW" lang="zh-Hant-TW" hidden>帶你看看 ting39.github.io 背後的各個零件：從星空背景、秘密終端機，到這個部落格。</span><span data-lang-block="ja" lang="ja" hidden>ting39.github.io を支える部品をひととおり紹介します。星空の背景から秘密のターミナル、このブログまで。</span></span>
+          <span class="pi-meta mono"><span data-lang-block="en" lang="en"><span data-i18n="blog.min" data-i18n-vars='{"n":2}'>2 min read</span></span><span data-lang-block="zh-TW" lang="zh-Hant-TW" hidden><span data-i18n="blog.min" data-i18n-vars='{"n":2}'>2 min read</span></span><span data-lang-block="ja" lang="ja" hidden><span data-i18n="blog.min" data-i18n-vars='{"n":3}'>3 min read</span></span> · #meta #web</span>
         </span>
       </a></li>
     </ol>
   </main>
 
   <footer>
-    <p class="mono">built from scratch · hosted on GitHub Pages · © <span id="footYear">2026</span> ting39 · <a href="../feed.xml">rss</a> <button class="term-btn" type="button" data-terminal aria-label="Open terminal" title="terminal (press `)">&gt;_</button></p>
+    <p class="mono"><span data-i18n="foot.built">built from scratch · hosted on GitHub Pages ·</span> © <span id="footYear">2026</span> ting39 · <a href="../feed.xml">rss</a> <button class="term-btn" type="button" data-terminal aria-label="Open terminal" title="terminal (press `)" data-i18n-attr="aria-label:foot.term;title:foot.termTitle">&gt;_</button></p>
   </footer>
 
+  <script src="../assets/i18n.js?v=33f9f69d"></script>
+  <script src="../assets/i18n-strings.js?v=33f9f69d"></script>
   <script src="../projects.js"></script>
-  <script src="../assets/blog.js?v=5140fa63" defer></script>
+  <script src="../assets/blog.js?v=33f9f69d" defer></script>
 </body>
 </html>

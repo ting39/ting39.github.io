@@ -5,6 +5,16 @@
   const root = document.documentElement;
   const BASE = new URL("..", document.currentScript.src); // the site root (this file lives in /assets/)
 
+  // ---- language (assets/i18n.js): switcher + show the post in the reader's language ----
+  if (window.I18N) {
+    const ls = document.getElementById("langSwitch");
+    if (ls) I18N.switcher(ls);
+    I18N.apply(document);
+    const post = document.querySelector("article.post h1");
+    const retitle = () => { const v = post && [...post.children].find((e) => !e.hidden); if (v) document.title = v.textContent + " · ting39"; };
+    retitle(); I18N.onChange(retitle);
+  }
+
   const setTheme = (t) => {
     root.dataset.theme = t;
     try { localStorage.setItem("theme", t); } catch {}
@@ -89,12 +99,13 @@
     el.onload = res; el.onerror = rej;
     document.head.appendChild(el);
   });
-  const TERM_V = "2"; // keep in sync with script.js
+  const TERM_V = "3"; // keep in sync with script.js
   let termP = null;
   function openTerminal(cmd) {
     if (window.T39SH) return window.T39SH.open(cmd);
     termP ||= Promise.all([
       load("link", { rel: "stylesheet", href: new URL("assets/terminal.css?v=" + TERM_V, BASE).href }),
+      load("script", { src: new URL("assets/terminal-i18n.js?v=" + TERM_V, BASE).href }),
       load("script", { src: new URL("assets/terminal.js?v=" + TERM_V, BASE).href }),
     ]).catch((e) => { termP = null; throw e; });
     termP.then(() => window.T39SH.open(cmd)).catch(() => {});

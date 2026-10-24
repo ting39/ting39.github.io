@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ting39</title>
-  <meta name="description" content="ting39 — personal homepage, projects and experiments.">
+  <meta name="description" content="ting39 — personal homepage, projects and experiments. 個人網站 · 個人サイト">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
   <meta property="og:title" content="ting39">
   <meta property="og:description" content="ting39 — personal homepage, projects and experiments.">
@@ -25,82 +25,83 @@
   <header class="nav">
     <a class="logo" href="#top">ting39<span class="blink">_</span></a>
     <nav>
-      <a href="#about">about</a>
-      <a href="#projects">projects</a>
-      <a href="#blog" id="blogNav" hidden>blog</a>
-      <a href="#music" id="musicNav" hidden>music</a>
-      <a href="#contact">contact</a>
+      <a href="#about" data-i18n="nav.about">about</a>
+      <a href="#projects" data-i18n="nav.projects">projects</a>
+      <a href="#blog" id="blogNav" hidden data-i18n="nav.blog">blog</a>
+      <a href="#music" id="musicNav" hidden data-i18n="nav.music">music</a>
+      <a href="#contact" data-i18n="nav.contact">contact</a>
     </nav>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">◐</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme" data-i18n-attr="aria-label:nav.theme">◐</button>
+    <div id="langSwitch"></div>
   </header>
 
   <main id="top">
     <!-- HERO -->
     <section class="hero">
-      <p class="mono kicker"><button class="kicker-btn" type="button" data-terminal title="open a terminal (or press `)">~/hello-world $</button></p>
+      <p class="mono kicker"><button class="kicker-btn" type="button" data-terminal title="open a terminal (or press `)" data-i18n-attr="title:hero.terminal">~/hello-world $</button></p>
       <h1 class="glitch" data-text="ting39">ting39</h1>
       <p class="tagline">
         <span class="mono">&gt;</span> <span id="typed"></span><span class="caret">|</span>
       </p>
       <div class="hero-actions">
-        <a class="btn primary" href="#projects">See projects</a>
-        <a class="btn ghost" href="#contact">Say hi</a>
+        <a class="btn primary" href="#projects" data-i18n="hero.see">See projects</a>
+        <a class="btn ghost" href="#contact" data-i18n="hero.hi">Say hi</a>
       </div>
-      <a class="scroll-hint" href="#about" aria-label="Scroll down"><span></span></a>
+      <a class="scroll-hint" href="#about" aria-label="Scroll down" data-i18n-attr="aria-label:hero.scroll"><span></span></a>
     </section>
 
     <!-- ABOUT -->
     <section id="about" class="section reveal">
-      <h2><span class="num">01.</span> about</h2>
+      <h2><span class="num">01.</span> <span data-i18n="about.h">about</span></h2>
       <div class="about-grid">
         <div class="card about-text">
-          <p>Hi, I'm <strong>ting39</strong>. This is my corner of the internet, a place for the things I build, break and learn along the way.</p>
-          <p class="muted">More about me is coming soon. For now, enjoy the stars.</p>
+          <p data-i18n-html="about.p1">Hi, I'm <strong>ting39</strong>. This is my corner of the internet, a place for the things I build, break and learn along the way.</p>
+          <p class="muted" data-i18n="about.p2">More about me is coming soon. For now, enjoy the stars.</p>
         </div>
         <div class="card stats">
-          <div><span class="stat" data-count="0">0</span><small>projects shipped</small></div>
-          <div><span class="stat">∞</span><small>ideas queued</small></div>
-          <div><span class="stat" id="year"></span><small>started</small></div>
+          <div><span class="stat" data-count="0">0</span><small data-i18n="stat.shipped">projects shipped</small></div>
+          <div><span class="stat">∞</span><small data-i18n="stat.ideas">ideas queued</small></div>
+          <div><span class="stat" id="year"></span><small data-i18n="stat.started">started</small></div>
         </div>
       </div>
     </section>
 
     <!-- PROJECTS -->
     <section id="projects" class="section reveal">
-      <h2><span class="num">02.</span> projects</h2>
+      <h2><span class="num">02.</span> <span data-i18n="projects.h">projects</span></h2>
       <div class="filters" id="filters"></div>
       <div class="project-grid" id="projectGrid"></div>
       <div class="empty card" id="emptyState" hidden>
         <div class="orbit"><span></span></div>
-        <h3>Nothing here yet</h3>
-        <p class="muted">Projects are being built in the playground. Check back soon.</p>
+        <h3 data-i18n="projects.empty">Nothing here yet</h3>
+        <p class="muted" data-i18n="projects.emptySub">Projects are being built in the playground. Check back soon.</p>
       </div>
     </section>
 
     <!-- WRITING (latest posts from posts.json, which .github/workflows/blog.yml builds from posts/*.md) -->
     <section id="blog" class="section reveal" hidden>
-      <h2><span class="num">03.</span> writing</h2>
+      <h2><span class="num">03.</span> <span data-i18n="blog.h">writing</span></h2>
       <ol class="post-list" id="latestPosts"></ol>
-      <p class="mono more-posts"><a href="blog/">all posts →</a> · <a href="feed.xml">rss</a></p>
+      <p class="mono more-posts"><a href="blog/" data-i18n="blog.all">all posts →</a> · <a href="feed.xml" data-i18n="blog.rss">rss</a></p>
     </section>
 
     <!-- MUSIC (filled weekly from Spotify by .github/workflows/spotify.yml) -->
     <section id="music" class="section reveal" hidden>
-      <h2><span class="num">03.</span> on repeat</h2>
-      <p class="muted music-sub">My most-played songs on Spotify over the last 4 weeks.</p>
+      <h2><span class="num">03.</span> <span data-i18n="music.h">on repeat</span></h2>
+      <p class="muted music-sub" data-i18n="music.sub">My most-played songs on Spotify over the last 4 weeks.</p>
       <ol class="tracks" id="tracks"></ol>
       <div class="player" id="player" hidden>
-        <div class="player-slot"><div class="player-loading mono">loading Spotify player…</div></div>
-        <p class="player-note">Signed in to Spotify in this browser? Full songs play here. Otherwise Spotify plays a 30-second preview.</p>
+        <div class="player-slot"><div class="player-loading mono" data-i18n="music.loading">loading Spotify player…</div></div>
+        <p class="player-note" data-i18n="music.note">Signed in to Spotify in this browser? Full songs play here. Otherwise Spotify plays a 30-second preview.</p>
       </div>
-      <p class="mono music-foot"><span class="spotify-dot"></span> via <a href="https://open.spotify.com" target="_blank" rel="noopener">Spotify</a> · updated weekly · last <span id="musicUpdated"></span></p>
+      <p class="mono music-foot"><span class="spotify-dot"></span> <span data-i18n="music.via">via</span> <a href="https://open.spotify.com" target="_blank" rel="noopener">Spotify</a> · <span data-i18n="music.weekly">updated weekly · last</span> <span id="musicUpdated"></span></p>
     </section>
 
     <!-- CONTACT -->
     <section id="contact" class="section reveal">
-      <h2><span class="num">03.</span> contact</h2>
+      <h2><span class="num">03.</span> <span data-i18n="contact.h">contact</span></h2>
       <div class="card contact">
-        <p>Want to collaborate, or just say hello?</p>
+        <p data-i18n="contact.p">Want to collaborate, or just say hello?</p>
         <div class="links">
           <a class="btn primary" href="https://github.com/ting39" target="_blank" rel="noopener">GitHub ↗</a>
         </div>
@@ -109,9 +110,11 @@
   </main>
 
   <footer>
-    <p class="mono">built from scratch · hosted on GitHub Pages · © <span id="footYear"></span> ting39 <button class="term-btn" type="button" data-terminal aria-label="Open terminal" title="terminal (press `)">&gt;_</button></p>
+    <p class="mono"><span data-i18n="foot.built">built from scratch · hosted on GitHub Pages ·</span> © <span id="footYear"></span> ting39 <button class="term-btn" type="button" data-terminal aria-label="Open terminal" title="terminal (press `)" data-i18n-attr="aria-label:foot.term;title:foot.termTitle">&gt;_</button></p>
   </footer>
 
+  <script src="assets/i18n.js"></script>
+  <script src="assets/i18n-strings.js"></script>
   <script src="projects.js"></script>
   <script src="script.js"></script>
 </body>

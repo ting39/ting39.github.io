@@ -300,3 +300,11 @@ footer { text-align: center; padding: 60px 16px 40px; color: var(--muted); font-
   background: var(--a1); color: #fff; transition: top .2s;
 }
 .skip:focus { top: 16px; }
+
+/* language switch (assets/i18n.js) */
+.i18n-switch { display: flex; gap: 2px; border: 1px solid var(--border); border-radius: 999px; padding: 2px; }
+.i18n-switch button { font: inherit; font-size: .75rem; color: var(--muted); background: none; border: 0; border-radius: 999px; padding: 4px 8px; cursor: pointer; line-height: 1; }
+.i18n-switch button:hover { color: var(--fg); }
+.i18n-switch button[aria-pressed="true"] { color: #fff; background: linear-gradient(120deg, var(--a1), var(--a2)); }
+:lang(zh-Hant-TW) body, :lang(ja) body { line-break: strict; }
+@media (max-width: 680px) { .i18n-switch button { padding: 4px 6px; font-size: .7rem; } }

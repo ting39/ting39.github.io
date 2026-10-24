@@ -7,6 +7,65 @@
 (() => {
   "use strict";
   if (window.PET) return;
+  // ---- translations: keys are the English text; {placeholders} are filled in by PT() ----
+  const PDICT = {
+    "zh-TW": {
+      "an egg": "一顆蛋", "a baby": "寶寶", "a kid": "小朋友", "a grown-up": "大人", "a star": "一顆星星",
+      "✦ it hatched! say hi to {name}": "✦ 孵出來了！跟 {name} 打聲招呼吧", "✦ {name} grew into {label}!": "✦ {name} 長成{label}了！",
+      "hehe": "嘿嘿", "more pats pls": "再摸摸我嘛", "✦ happy ✦": "✦ 好開心 ✦", "purr…?": "呼嚕…？", "that tickles": "好癢喔",
+      "*wobble*": "*搖搖晃晃*", "something moved inside…": "裡面好像有東西在動…", "it's warm": "暖暖的", "*crack*": "*喀啦*",
+      "…five more minutes": "…再睡五分鐘", "eggs don't eat. yet.": "蛋還不會吃東西。暫時。", "so full… ✦": "好飽… ✦",
+      "{name} is full. try again later.": "{name} 吃飽了，等等再來吧。", "nom nom": "嚼嚼", "stardust! ✦": "星塵！✦",
+      "tastes like a supernova": "吃起來像超新星", "yum": "好吃", "you feed {name} a little star. ✦": "你餵 {name} 吃了一顆小星星。✦",
+      "zz…": "呼…", "☀ awake!": "☀ 醒了！", "{name} is back ✦": "{name} 回來了 ✦", "✦ cheat code accepted ✦": "✦ 密技啟動 ✦",
+      "whoa!": "哇！", "wheee": "咻～", "put me down!": "放我下來！", "up we go": "飛高高",
+      "♪ oh! music!": "♪ 喔！有音樂！", "♪ this one!": "♪ 就是這首！", "*vibing*": "*跟著搖擺*", "ooh, a terminal": "喔～終端機",
+      "☀ good morning": "☀ 早安", "it's late in Taipei. sleepy…": "台北已經很晚了，好睏…", "*yawn*": "*打哈欠*",
+      "oof": "唉唷", "ow…": "好痛…", "again!": "再一次！", "I'm {name} now ✦": "我現在叫 {name} 了 ✦",
+      "an egg appeared… pat it?": "出現了一顆蛋…要摸摸看嗎？", "zz… (it's night in Taipei)": "呼…（台北現在是晚上）",
+      "you're back! it's been {days} days ✦": "你回來了！已經 {days} 天了 ✦", "welcome back! visit #{n}": "歡迎回來！第 {n} 次來訪",
+      "Pet actions": "寵物動作", "Pat": "摸摸", "pat": "摸摸", "Feed a star": "餵一顆星星", "feed a star": "餵一顆星星",
+      "Nap or wake": "睡覺／起床", "nap / wake": "睡覺／起床", "Hide the pet": "藏起寵物", "hide (bring it back from the corner)": "藏起來（可從角落叫回來）",
+      "bring the pet back": "叫寵物回來", "Bring the pet back": "叫寵物回來",
+      "{name}, the site's pet ({stage}). Press to pat; drag to move.": "{name}，本站的寵物（{stage}）。按一下摸摸，拖曳可以移動。",
+      "you pat {name}. ♥": "你摸了摸 {name}。♥", "you pat the egg. it wobbles.": "你摸了摸蛋，它晃了一下。",
+      "{old} is now called {name}.": "{old} 現在叫做 {name} 了。", "{name} curls up for a nap. zz…": "{name} 縮成一團睡午覺。呼…",
+      "{name} wakes up. ☀": "{name} 醒來了。☀", "eggs can't dance. (they can roll, though.)": "蛋不會跳舞。（不過會滾。）",
+      "{name} dances. ♪": "{name} 跳起舞來。♪", "{name} hides. (`pet show` brings it back)": "{name} 躲起來了。（`pet show` 可以叫它回來）",
+      "{name} is back. ✦": "{name} 回來了。✦",
+    },
+    ja: {
+      "an egg": "たまご", "a baby": "あかちゃん", "a kid": "こども", "a grown-up": "おとな", "a star": "おほしさま",
+      "✦ it hatched! say hi to {name}": "✦ 生まれた！{name} にあいさつしよう", "✦ {name} grew into {label}!": "✦ {name} が{label}になった！",
+      "hehe": "えへへ", "more pats pls": "もっとなでて", "✦ happy ✦": "✦ しあわせ ✦", "purr…?": "ごろごろ…？", "that tickles": "くすぐったい",
+      "*wobble*": "*ゆらゆら*", "something moved inside…": "中で何か動いた…", "it's warm": "あったかい", "*crack*": "*ぴしっ*",
+      "…five more minutes": "…あと 5 分", "eggs don't eat. yet.": "たまごはまだ食べられない。", "so full… ✦": "おなかいっぱい… ✦",
+      "{name} is full. try again later.": "{name} はおなかいっぱい。また後でね。", "nom nom": "もぐもぐ", "stardust! ✦": "星くず！✦",
+      "tastes like a supernova": "超新星の味がする", "yum": "おいしい", "you feed {name} a little star. ✦": "{name} に小さな星をあげた。✦",
+      "zz…": "すや…", "☀ awake!": "☀ 起きた！", "{name} is back ✦": "{name} がもどってきた ✦", "✦ cheat code accepted ✦": "✦ 裏技が発動した ✦",
+      "whoa!": "わっ！", "wheee": "わーい", "put me down!": "おろしてー！", "up we go": "たかいたかい",
+      "♪ oh! music!": "♪ あっ！音楽だ！", "♪ this one!": "♪ この曲！", "*vibing*": "*ノリノリ*", "ooh, a terminal": "おお、ターミナルだ",
+      "☀ good morning": "☀ おはよう", "it's late in Taipei. sleepy…": "台北はもう夜おそい。ねむい…", "*yawn*": "*あくび*",
+      "oof": "うっ", "ow…": "いたた…", "again!": "もう一回！", "I'm {name} now ✦": "今日から {name} だよ ✦",
+      "an egg appeared… pat it?": "たまごが現れた…なでてみる？", "zz… (it's night in Taipei)": "すや…（台北は夜です）",
+      "you're back! it's been {days} days ✦": "おかえり！{days} 日ぶりだね ✦", "welcome back! visit #{n}": "おかえり！{n} 回目の訪問",
+      "Pet actions": "ペットの操作", "Pat": "なでる", "pat": "なでる", "Feed a star": "星をあげる", "feed a star": "星をあげる",
+      "Nap or wake": "寝る／起きる", "nap / wake": "寝る／起きる", "Hide the pet": "ペットを隠す", "hide (bring it back from the corner)": "隠す（すみから呼び戻せます）",
+      "bring the pet back": "ペットを呼び戻す", "Bring the pet back": "ペットを呼び戻す",
+      "{name}, the site's pet ({stage}). Press to pat; drag to move.": "{name}、このサイトのペット（{stage}）。押すとなでる、ドラッグで移動。",
+      "you pat {name}. ♥": "{name} をなでた。♥", "you pat the egg. it wobbles.": "たまごをなでた。ゆらゆらしている。",
+      "{old} is now called {name}.": "{old} の名前は {name} になった。", "{name} curls up for a nap. zz…": "{name} は丸くなってお昼寝。すや…",
+      "{name} wakes up. ☀": "{name} が起きた。☀", "eggs can't dance. (they can roll, though.)": "たまごは踊れない。（転がることはできる）",
+      "{name} dances. ♪": "{name} が踊っている。♪", "{name} hides. (`pet show` brings it back)": "{name} は隠れた。（`pet show` で呼び戻せます）",
+      "{name} is back. ✦": "{name} がもどってきた。✦",
+    },
+  };
+  const PT = (en, vars) => {
+    const lang = window.I18N ? I18N.lang : "en";
+    let t = (PDICT[lang] && PDICT[lang][en]) || en;
+    for (const k in vars || {}) t = t.split("{" + k + "}").join(vars[k]);
+    return t;
+  };
 
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const N = 16, SC = 3, S = N * SC; // sprite grid, pixel scale, on-screen size
@@ -123,11 +182,11 @@
   wrap.className = "pet-wrap";
   wrap.innerHTML = `
     <div class="pet-bubble" role="status" aria-live="polite"></div>
-    <div class="pet-tools" role="group" aria-label="Pet actions">
-      <button type="button" data-a="pat" aria-label="Pat" title="pat">♥</button>
-      <button type="button" data-a="feed" aria-label="Feed a star" title="feed a star">✦</button>
-      <button type="button" data-a="nap" aria-label="Nap or wake" title="nap / wake">☾</button>
-      <button type="button" data-a="hide" aria-label="Hide the pet" title="hide (bring it back from the corner)">✕</button>
+    <div class="pet-tools" role="group" aria-label="${PT("Pet actions")}">
+      <button type="button" data-a="pat" aria-label="${PT("Pat")}" title="${PT("pat")}">♥</button>
+      <button type="button" data-a="feed" aria-label="${PT("Feed a star")}" title="${PT("feed a star")}">✦</button>
+      <button type="button" data-a="nap" aria-label="${PT("Nap or wake")}" title="${PT("nap / wake")}">☾</button>
+      <button type="button" data-a="hide" aria-label="${PT("Hide the pet")}" title="${PT("hide (bring it back from the corner)")}">✕</button>
     </div>
     <button type="button" class="pet"><canvas aria-hidden="true"></canvas></button>`;
   const fxLayer = document.createElement("div");
@@ -137,8 +196,8 @@
   restore.type = "button";
   restore.className = "pet-restore";
   restore.textContent = "✦";
-  restore.title = "bring the pet back";
-  restore.setAttribute("aria-label", "Bring the pet back");
+  restore.title = PT("bring the pet back");
+  restore.setAttribute("aria-label", PT("Bring the pet back"));
   document.body.append(fxLayer, wrap, restore);
   const btn = wrap.querySelector(".pet"), bubble = wrap.querySelector(".pet-bubble"), cv = wrap.querySelector("canvas");
   const dpr = Math.min(devicePixelRatio || 1, 3);
@@ -162,7 +221,7 @@
 
   let bubbleT = 0;
   function say(text, ms = 2800) {
-    bubble.textContent = text;
+    bubble.textContent = PT(text);
     bubble.classList.add("on");
     clearTimeout(bubbleT);
     bubbleT = setTimeout(() => bubble.classList.remove("on"), ms);
@@ -190,12 +249,12 @@
       stage = s;
       bounce(-1, 300);
       fx("✦", "pet-gold", 8, 50);
-      say(stage === 1 ? `✦ it hatched! say hi to ${data.name}` : `✦ ${data.name} grew into ${STAGES[stage].label}!`, 4200);
+      say(stage === 1 ? PT("✦ it hatched! say hi to {name}", { name: data.name }) : PT("✦ {name} grew into {label}!", { name: data.name, label: PT(STAGES[stage].label) }), 4200);
       label();
     }
   }
   function label() {
-    btn.setAttribute("aria-label", `${data.name}, the site's pet (${STAGES[stage].id}). Press to pat; drag to move.`);
+    btn.setAttribute("aria-label", PT("{name}, the site's pet ({stage}). Press to pat; drag to move.", { name: data.name, stage: PT(STAGES[stage].label) }));
   }
 
   // ------------------------------------------------------------- actions
@@ -225,10 +284,10 @@
     kick();
   }
   function feed() {
-    if (stage === 0) { say("eggs don't eat. yet.", 1800); return "eggs don't eat. yet."; }
+    if (stage === 0) { say("eggs don't eat. yet.", 1800); return PT("eggs don't eat. yet."); }
     const t = Date.now();
     data.fed = data.fed.filter((f) => t - f < 600000);
-    if (data.fed.length >= 3) { say("so full… ✦", 1800); setFace("blink", 800); return `${data.name} is full. try again later.`; }
+    if (data.fed.length >= 3) { say("so full… ✦", 1800); setFace("blink", 800); return PT("{name} is full. try again later.", { name: data.name }); }
     data.fed.push(t);
     data.feeds++;
     if (state === "sleep") { awakeUntil = now() + 20000; state = "idle"; }
@@ -250,7 +309,7 @@
       gainXp(3);
       kick();
     }, reduced ? 0 : 650);
-    return `you feed ${data.name} a little star. ✦`;
+    return PT("you feed {name} a little star. ✦", { name: data.name });
   }
   function nap(on = state !== "sleep") {
     if (on) { goToSleep(); awakeUntil = 0; napUntil = now() + 60000; say("zz…", 1400); }
@@ -267,7 +326,7 @@
     save();
     wrap.hidden = h;
     restore.hidden = !h;
-    if (!h) { y = Math.min(y, floorY()); kick(); say(`${data.name} is back ✦`, 1800); }
+    if (!h) { y = Math.min(y, floorY()); kick(); say(PT("{name} is back ✦", { name: data.name }), 1800); }
   }
   function party() {
     if (stage === 0) { pat(); return; }
@@ -580,25 +639,25 @@
             "pat, feed, name <name>, nap, wake, dance, hide, show",
           ];
         }
-        case "pat": case "pet": pat(); return [stage ? `you pat ${data.name}. ♥` : "you pat the egg. it wobbles."];
+        case "pat": case "pet": pat(); return [stage ? PT("you pat {name}. ♥", { name: data.name }) : PT("you pat the egg. it wobbles.")];
         case "feed": return [feed()];
         case "name": {
           const n = cleanName(rest.join(" "));
           if (!n) return { lines: ["usage: pet name <name>  (letters, digits, spaces; up to 16)"], code: 1 };
           const old = data.name;
           data.name = n; save(); label();
-          say(`I'm ${n} now ✦`, 2000);
-          return [`${old} is now called ${n}.`];
+          say(PT("I'm {name} now ✦", { name: n }), 2000);
+          return [PT("{old} is now called {name}.", { old, name: n })];
         }
-        case "nap": case "sleep": nap(true); return [`${data.name} curls up for a nap. zz…`];
-        case "wake": nap(false); return [`${data.name} wakes up. ☀`];
+        case "nap": case "sleep": nap(true); return [PT("{name} curls up for a nap. zz…", { name: data.name })];
+        case "wake": nap(false); return [PT("{name} wakes up. ☀", { name: data.name })];
         case "dance":
-          if (!stage) return ["eggs can't dance. (they can roll, though.)"];
+          if (!stage) return [PT("eggs can't dance. (they can roll, though.)")];
           dancing = true; state = "dance"; kick();
           setTimeout(() => { dancing = false; document.dispatchEvent(new CustomEvent("site:playing", { detail: { playing: false } })); }, 5000);
-          return [`${data.name} dances. ♪`];
-        case "hide": setHidden(true); return [`${data.name} hides. (\`pet show\` brings it back)`];
-        case "show": setHidden(false); return [`${data.name} is back. ✦`];
+          return [PT("{name} dances. ♪", { name: data.name })];
+        case "hide": setHidden(true); return [PT("{name} hides. (`pet show` brings it back)", { name: data.name })];
+        case "show": setHidden(false); return [PT("{name} is back. ✦", { name: data.name })];
         default: return { lines: [`pet: unknown command '${sub}'. try: status, pat, feed, name, nap, wake, dance, hide, show`], code: 1 };
       }
     },
@@ -630,7 +689,7 @@
       if (data.visits === 1 && stage === 0) say("an egg appeared… pat it?", 3600);
       else if (newSession && stage > 0) {
         const days = Math.floor(away / 86400000);
-        say(state === "sleep" ? "zz… (it's night in Taipei)" : days >= 3 ? `you're back! it's been ${days} days ✦` : `welcome back! visit #${data.visits}`, 3200);
+        say(state === "sleep" ? "zz… (it's night in Taipei)" : days >= 3 ? PT("you're back! it's been {days} days ✦", { days }) : PT("welcome back! visit #{n}", { n: data.visits }), 3200);
         if (state !== "sleep") { setFace("happy", 1500, "smile"); bounce(1, 200); }
       }
     }, 900);

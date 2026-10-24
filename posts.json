@@ -14,7 +14,19 @@
       "words": 417,
       "bytes": 2973,
       "lang": "en",
-      "url": "blog/how-this-site-works/"
+      "url": "blog/how-this-site-works/",
+      "i18n": {
+        "ja": {
+          "title": "このサイトのしくみ",
+          "summary": "ting39.github.io を支える部品をひととおり紹介します。星空の背景から秘密のターミナル、このブログまで。",
+          "readingTime": 3
+        },
+        "zh-TW": {
+          "title": "這個網站是怎麼運作的",
+          "summary": "帶你看看 ting39.github.io 背後的各個零件：從星空背景、秘密終端機，到這個部落格。",
+          "readingTime": 2
+        }
+      }
     }
   ]
 }

@@ -20,8 +20,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../style.css?v=5140fa63">
-  <link rel="stylesheet" href="../../assets/blog.css?v=5140fa63">
+  <link rel="stylesheet" href="../../style.css?v=33f9f69d">
+  <link rel="stylesheet" href="../../assets/blog.css?v=33f9f69d">
   <meta property="article:published_time" content="2026-10-20">
   <meta property="article:tag" content="meta">
   <meta property="article:tag" content="web">
@@ -29,29 +29,31 @@
 </head>
 <body class="blog-page">
   <canvas id="sky" aria-hidden="true"></canvas>
-  <a class="skip" href="#content">Skip to content</a>
+  <a class="skip" href="#content" data-i18n="blog.skip">Skip to content</a>
   <header class="nav">
     <a class="logo" href="../../">ting39<span class="blink">_</span></a>
     <nav aria-label="Site">
-      <a href="../../#about">about</a>
-      <a href="../../#projects">projects</a>
-      <a href="../../blog/" class="active" aria-current="page">blog</a>
-      <a href="../../#contact">contact</a>
+      <a href="../../#about" data-i18n="nav.about">about</a>
+      <a href="../../#projects" data-i18n="nav.projects">projects</a>
+      <a href="../../blog/" class="active" aria-current="page" data-i18n="nav.blog">blog</a>
+      <a href="../../#contact" data-i18n="nav.contact">contact</a>
     </nav>
-    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle light/dark theme">◐</button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle light/dark theme" data-i18n-attr="aria-label:nav.theme">◐</button>
+    <div id="langSwitch"></div>
   </header>
 
   <main id="content" class="blog-main">
     <div class="progress" aria-hidden="true"></div>
-    <article class="post" lang="en">
+    <article class="post">
       <header class="post-head">
         <a class="back mono" href="../../blog/">← cd ../blog</a>
-        <p class="mono kicker"><time datetime="2026-10-20">2026-10-20</time> · 2 min read</p>
-        <h1>How this site works</h1>
+        <p class="mono kicker"><time datetime="2026-10-20">2026-10-20</time> · <span data-lang-block="en" lang="en"><span data-i18n="blog.min" data-i18n-vars='{"n":2}'>2 min read</span></span><span data-lang-block="zh-TW" lang="zh-Hant-TW" hidden><span data-i18n="blog.min" data-i18n-vars='{"n":2}'>2 min read</span></span><span data-lang-block="ja" lang="ja" hidden><span data-i18n="blog.min" data-i18n-vars='{"n":3}'>3 min read</span></span></p>
+        <h1><span data-lang-block="en" lang="en">How this site works</span><span data-lang-block="zh-TW" lang="zh-Hant-TW" hidden>這個網站是怎麼運作的</span><span data-lang-block="ja" lang="ja" hidden>このサイトのしくみ</span></h1>
         <ul class="tags" aria-label="Tags"><li><a href="../../blog/tags/meta/">#meta</a></li><li><a href="../../blog/tags/web/">#web</a></li></ul>
       </header>
+      <div data-lang-block="en" lang="en">
       <details class="toc">
-        <summary class="mono">contents</summary>
+        <summary class="mono" data-i18n="blog.contents">contents</summary>
         <ol><li class="toc-2"><a href="#the-homepage">The homepage</a></li><li class="toc-2"><a href="#music-refreshed-weekly">Music, refreshed weekly</a></li><li class="toc-2"><a href="#a-terminal-hiding-in-the-page">A terminal hiding in the page</a></li><li class="toc-2"><a href="#this-blog">This blog</a></li><li class="toc-2"><a href="#why-keep-it-this-simple">Why keep it this simple?</a></li></ol>
       </details>
       <div class="prose">
@@ -102,18 +104,96 @@ database and no dependencies to update. When something needs to run, like the we
 Spotify refresh or rebuilding the blog, a scheduled GitHub Action does it and commits the
 result. Then the site is plain files again.</p>
       </div>
+      </div>
+      <div data-lang-block="ja" lang="ja" hidden>
+      <details class="toc">
+        <summary class="mono" data-i18n="blog.contents">contents</summary>
+        <ol><li class="toc-2"><a href="#トップページ">トップページ</a></li><li class="toc-2"><a href="#毎週更新される音楽">毎週更新される音楽</a></li><li class="toc-2"><a href="#ページに隠れたターミナル">ページに隠れたターミナル</a></li><li class="toc-2"><a href="#このブログ">このブログ</a></li><li class="toc-2"><a href="#なぜこんなにシンプルなのか">なぜこんなにシンプルなのか</a></li></ol>
+      </details>
+      <div class="prose">
+<p>このサイトはあえて小さく作っています。素の HTML・CSS・JavaScript を GitHub Pages で配信し、トップページ自体にはフレームワークもビルド工程もありません。いま読んでいるページの裏側で何が起きているかを紹介します。</p>
+<aside class="callout callout-note"><p class="callout-title">Note</p><p>この最初の記事は、AI アシスタントの Claude が ting39 と一緒にサイトを作りながら書いたもので、ドキュメントとして置いています。ting39 はこれを編集したり、front matter に
+<code>draft: true</code> を足して非公開にしたりできます。</p></aside>
+<h2 id="トップページ">トップページ<a class="anchor" href="#トップページ" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>背景は <code>&lt;canvas&gt;</code> の星空です。数百個の点がゆっくり漂い、カーソルが近づくと淡い線でつながります。それ以外は普通の HTML です。作品カードは <code>projects.js</code> という 1 つのファイルから作られているので、作品を追加するにはオブジェクトを 1 つ足すだけです。</p>
+<figure class="code"><figcaption><span class="code-title">projects.js</span><span class="code-lang">js</span></figcaption><pre data-lang="js"><code class="language-js"><span class="tok-builtin">window</span><span class="tok-punct">.</span><span class="tok-type">PROJECTS</span> <span class="tok-operator">=</span> <span class="tok-punct">[</span>
+  <span class="tok-punct">{</span>
+    title<span class="tok-operator">:</span> <span class="tok-string">&quot;2048: Stellar&quot;</span><span class="tok-punct">,</span>
+    description<span class="tok-operator">:</span> <span class="tok-string">&quot;2048 in space.&quot;</span><span class="tok-punct">,</span>
+    tags<span class="tok-operator">:</span> <span class="tok-punct">[</span><span class="tok-string">&quot;game&quot;</span><span class="tok-punct">,</span> <span class="tok-string">&quot;javascript&quot;</span><span class="tok-punct">]</span><span class="tok-punct">,</span>
+    link<span class="tok-operator">:</span> <span class="tok-string">&quot;https://ting39.github.io/2048/&quot;</span><span class="tok-punct">,</span>
+  <span class="tok-punct">}</span><span class="tok-punct">,</span>
+<span class="tok-punct">]</span><span class="tok-punct">;</span></code></pre></figure>
+<h2 id="毎週更新される音楽">毎週更新される音楽<a class="anchor" href="#毎週更新される音楽" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>「最近よく聴く曲」には、ting39 がこの 4 週間でよく再生した 5 曲が並びます。毎週月曜の台湾時間 08:00 に GitHub Action が動き、Spotify Web API にトップ曲を問い合わせて、結果を <code>spotify.json</code> にコミットします。ページはそのファイルを読み込みます。再生ボタンは押したときにだけ Spotify の埋め込みプレーヤーを読み込むので、再生しない訪問者は
+Spotify から何も読み込みません。</p>
+<h2 id="ページに隠れたターミナル">ページに隠れたターミナル<a class="anchor" href="#ページに隠れたターミナル" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>サイトのどこでも <kbd>`</kbd> を押すか、フッターの <code>&gt;_</code> をクリックすると、小さなシェルがスライドしてきます。そのファイルシステムはサイト自身のデータから作られています。</p>
+<div class="table-wrap"><table><thead><tr><th>パス</th><th>中身</th></tr></thead><tbody><tr><td><code>~/projects/</code></td><td>作品カード 1 枚につき 1 ファイル</td></tr><tr><td><code>~/blog/</code></td><td>このブログの記事（Markdown のまま）</td></tr><tr><td><code>~/music/on-repeat.txt</code></td><td>トップページと同じトップ 5</td></tr></tbody></table></div>
+<p>コマンド履歴、Tab 補完、パイプ（<code>history | grep cd</code>）、<code>man</code> ページ、そして <code>help</code> には載っていないものがいくつかあります。コードは初めて開いたときにだけダウンロードされます。</p>
+<h2 id="このブログ">このブログ<a class="anchor" href="#このブログ" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>記事は <code>posts/</code> に置いた Markdown ファイルです。プッシュすると別の Action が動き、小さな Node スクリプト（<code>tools/blog/build.mjs</code>、依存パッケージなし）で次のものを生成します。</p>
+<ul>
+<li>記事ごとのページ、記事一覧、タグごとのページ</li>
+<li><a href="../../feed.xml">Atom フィード</a>と RSS フィード</li>
+<li>トップページとターミナルが読み込む <code>posts.json</code></li>
+</ul>
+<p>コードブロックはビルド時に色付けされるので、ページ側で色を付けるための JavaScript は不要です。出力は決定的で、記事を変えずに再ビルドしても何も変わらず、コミット履歴がきれいに保たれます。</p>
+<h2 id="なぜこんなにシンプルなのか">なぜこんなにシンプルなのか<a class="anchor" href="#なぜこんなにシンプルなのか" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>ファイルだけでできたページは、手入れをしなくても動き続けます。サーバーもデータベースも、更新が必要な依存パッケージもありません。毎週の Spotify 更新やブログの再ビルドのように何かを実行する必要があるときは、スケジュールされた GitHub Action が実行して結果をコミットします。そのあと、サイトはまたただのファイルに戻ります。</p>
+      </div>
+      </div>
+      <div data-lang-block="zh-TW" lang="zh-Hant-TW" hidden>
+      <details class="toc">
+        <summary class="mono" data-i18n="blog.contents">contents</summary>
+        <ol><li class="toc-2"><a href="#首頁">首頁</a></li><li class="toc-2"><a href="#每週更新的音樂">每週更新的音樂</a></li><li class="toc-2"><a href="#藏在頁面裡的終端機">藏在頁面裡的終端機</a></li><li class="toc-2"><a href="#這個部落格">這個部落格</a></li><li class="toc-2"><a href="#為什麼要這麼簡單">為什麼要這麼簡單？</a></li></ol>
+      </details>
+      <div class="prose">
+<p>這個網站刻意做得很小：純 HTML、CSS 和 JavaScript，放在 GitHub Pages 上，首頁本身沒有框架，也不需要建置。以下是你正在閱讀的這一頁背後發生的事。</p>
+<aside class="callout callout-note"><p class="callout-title">Note</p><p>這第一篇文章是 AI 助理 Claude 和 ting39 一起製作網站時寫的，當作說明文件。ting39 可以修改它，或在 front matter 加上
+<code>draft: true</code> 把它隱藏起來。</p></aside>
+<h2 id="首頁">首頁<a class="anchor" href="#首頁" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>背景是一個 <code>&lt;canvas&gt;</code> 星空：幾百個慢慢飄動的點，游標靠近時會連出淡淡的線。其他部分都是一般的 HTML。作品卡片來自單一檔案 <code>projects.js</code>，所以新增作品只需要加上一個物件：</p>
+<figure class="code"><figcaption><span class="code-title">projects.js</span><span class="code-lang">js</span></figcaption><pre data-lang="js"><code class="language-js"><span class="tok-builtin">window</span><span class="tok-punct">.</span><span class="tok-type">PROJECTS</span> <span class="tok-operator">=</span> <span class="tok-punct">[</span>
+  <span class="tok-punct">{</span>
+    title<span class="tok-operator">:</span> <span class="tok-string">&quot;2048: Stellar&quot;</span><span class="tok-punct">,</span>
+    description<span class="tok-operator">:</span> <span class="tok-string">&quot;2048 in space.&quot;</span><span class="tok-punct">,</span>
+    tags<span class="tok-operator">:</span> <span class="tok-punct">[</span><span class="tok-string">&quot;game&quot;</span><span class="tok-punct">,</span> <span class="tok-string">&quot;javascript&quot;</span><span class="tok-punct">]</span><span class="tok-punct">,</span>
+    link<span class="tok-operator">:</span> <span class="tok-string">&quot;https://ting39.github.io/2048/&quot;</span><span class="tok-punct">,</span>
+  <span class="tok-punct">}</span><span class="tok-punct">,</span>
+<span class="tok-punct">]</span><span class="tok-punct">;</span></code></pre></figure>
+<h2 id="每週更新的音樂">每週更新的音樂<a class="anchor" href="#每週更新的音樂" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>「最近常聽」區塊列出 ting39 過去四週最常播放的五首歌。每週一台灣時間 08:00，GitHub Action 會向 Spotify Web API 查詢熱門曲目，並把結果提交到 <code>spotify.json</code>，頁面再讀取這個檔案。播放按鈕只有在你按下時才會載入 Spotify 的嵌入式播放器，所以沒按播放的訪客不會從 Spotify 載入任何東西。</p>
+<h2 id="藏在頁面裡的終端機">藏在頁面裡的終端機<a class="anchor" href="#藏在頁面裡的終端機" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>在網站任何地方按 <kbd>`</kbd>，或點頁尾的 <code>&gt;_</code>，就會滑出一個小小的 shell。它的檔案系統是用網站自己的資料建出來的：</p>
+<div class="table-wrap"><table><thead><tr><th>路徑</th><th>內容</th></tr></thead><tbody><tr><td><code>~/projects/</code></td><td>每張作品卡片一個檔案</td></tr><tr><td><code>~/blog/</code></td><td>這個部落格的文章（原始 Markdown）</td></tr><tr><td><code>~/music/on-repeat.txt</code></td><td>和首頁一樣的前五名</td></tr></tbody></table></div>
+<p>它有指令紀錄、Tab 自動完成、管線（<code>history | grep cd</code>）、<code>man</code> 說明書，還有幾個 <code>help</code> 沒提到的東西。程式碼只會在你第一次打開時下載。</p>
+<h2 id="這個部落格">這個部落格<a class="anchor" href="#這個部落格" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>文章是放在 <code>posts/</code> 裡的 Markdown 檔。推送之後會觸發另一個 Action，執行一支小小的 Node 腳本（<code>tools/blog/build.mjs</code>，沒有任何相依套件）來產生：</p>
+<ul>
+<li>每篇文章的頁面，以及文章索引和每個標籤的頁面，</li>
+<li>一個 <a href="../../feed.xml">Atom 訂閱</a>和一個 RSS 訂閱，</li>
+<li><code>posts.json</code>，給首頁和終端機讀取。</li>
+</ul>
+<p>程式碼區塊在建置時就上好色了，所以頁面不需要額外的 JavaScript 來顯示顏色。輸出是固定的：沒改文章就重新建置，不會有任何變化，讓提交紀錄保持乾淨。</p>
+<h2 id="為什麼要這麼簡單">為什麼要這麼簡單？<a class="anchor" href="#為什麼要這麼簡單" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>一個只由檔案組成的網頁，不需要維護就能一直運作。沒有伺服器、沒有資料庫，也沒有要更新的相依套件。需要執行某些事情時，例如每週更新 Spotify 或重建部落格，就由排程的 GitHub Action 執行並提交結果。之後網站又變回單純的檔案。</p>
+      </div>
+      </div>
       <footer class="post-foot">
-        <nav class="post-nav" aria-label="More posts"><span></span><span></span></nav>
-        <p class="mono post-meta"><a href="https://github.com/ting39/ting39.github.io/blob/main/posts/how-this-site-works.md">view source</a> · <a href="../../feed.xml">subscribe via rss</a> · or type <kbd>`</kbd> and <code>cat ~/blog/how-this-site-works.md</code></p>
+        <nav class="post-nav" aria-label="More posts" data-i18n-attr="aria-label:blog.more"><span></span><span></span></nav>
+        <p class="mono post-meta"><a href="https://github.com/ting39/ting39.github.io/blob/main/posts/how-this-site-works.md" data-i18n="blog.source">view source</a> · <a href="../../feed.xml" data-i18n="blog.sub">subscribe via rss</a> · <span data-i18n="blog.ortype">or type</span> <kbd>`</kbd> and <code>cat ~/blog/how-this-site-works.md</code></p>
       </footer>
     </article>
   </main>
 
   <footer>
-    <p class="mono">built from scratch · hosted on GitHub Pages · © <span id="footYear">2026</span> ting39 · <a href="../../feed.xml">rss</a> <button class="term-btn" type="button" data-terminal aria-label="Open terminal" title="terminal (press `)">&gt;_</button></p>
+    <p class="mono"><span data-i18n="foot.built">built from scratch · hosted on GitHub Pages ·</span> © <span id="footYear">2026</span> ting39 · <a href="../../feed.xml">rss</a> <button class="term-btn" type="button" data-terminal aria-label="Open terminal" title="terminal (press `)" data-i18n-attr="aria-label:foot.term;title:foot.termTitle">&gt;_</button></p>
   </footer>
 
+  <script src="../../assets/i18n.js?v=33f9f69d"></script>
+  <script src="../../assets/i18n-strings.js?v=33f9f69d"></script>
   <script src="../../projects.js"></script>
-  <script src="../../assets/blog.js?v=5140fa63" defer></script>
+  <script src="../../assets/blog.js?v=33f9f69d" defer></script>
 </body>
 </html>

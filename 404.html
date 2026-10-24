@@ -42,37 +42,38 @@
   <header class="nav">
     <a class="logo" href="/">ting39<span class="blink">_</span></a>
     <nav aria-label="Site">
-      <a href="/#about">about</a>
-      <a href="/#projects">projects</a>
-      <a href="/blog/">blog</a>
-      <a href="/#contact">contact</a>
+      <a href="/#about" data-i18n="nav.about">about</a>
+      <a href="/#projects" data-i18n="nav.projects">projects</a>
+      <a href="/blog/" data-i18n="nav.blog">blog</a>
+      <a href="/#contact" data-i18n="nav.contact">contact</a>
     </nav>
     <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle light/dark theme">◐</button>
+    <div id="langSwitch"></div>
   </header>
 
   <main class="lost" id="content">
     <div class="lost-inner">
       <p class="big" aria-hidden="true">404</p>
-      <h1>This page drifted off into space.</h1>
+      <h1 data-i18n="404.h">This page drifted off into space.</h1>
       <div class="shell" aria-live="polite">
         <div><span class="ps">guest@ting39:~$</span> cd <span id="path">/somewhere</span></div>
         <div class="err">cd: no such file or directory</div>
         <div class="dim" id="suggest"></div>
       </div>
       <div class="hero-actions">
-        <a class="btn primary" href="/">Take me home</a>
-        <a class="btn ghost" href="/#projects">See projects</a>
-        <a class="btn ghost" href="/blog/">Read the blog</a>
+        <a class="btn primary" href="/" data-i18n="404.home">Take me home</a>
+        <a class="btn ghost" href="/#projects" data-i18n="hero.see">See projects</a>
+        <a class="btn ghost" href="/blog/" data-i18n="404.blog">Read the blog</a>
       </div>
     </div>
   </main>
 
   <footer>
-    <p class="mono">built from scratch · hosted on GitHub Pages · © <span id="footYear">2026</span> ting39 <button class="term-btn" type="button" data-terminal aria-label="Open terminal" title="terminal (press `)">&gt;_</button></p>
+    <p class="mono"><span data-i18n="foot.built">built from scratch · hosted on GitHub Pages ·</span> © <span id="footYear">2026</span> ting39 <button class="term-btn" type="button" data-terminal aria-label="Open terminal" title="terminal (press `)">&gt;_</button></p>
   </footer>
 
   <script>
-    (() => {
+    addEventListener("DOMContentLoaded", () => {
       const path = decodeURIComponent(location.pathname);
       document.getElementById("path").textContent = path;
       // suggest the closest real page for typos like /2o48 or /gatewrite
@@ -87,12 +88,15 @@
       const [best, dist] = Object.keys(pages).filter((p) => p !== "/").map((p) => [p, lev(first, p)]).sort((a, b) => a[1] - b[1])[0];
       const out = document.getElementById("suggest");
       if (dist <= 3) {
-        out.append("did you mean ");
+        const T = (k) => (window.I18N ? I18N.t(k) : k);
+        out.append(T("404.mean") + " ");
         const a = Object.assign(document.createElement("a"), { href: best, textContent: best });
-        out.append(a, ` (${pages[best]})?`);
-      } else out.textContent = "try one of the links below, or press ` for a terminal.";
-    })();
+        out.append(a, ` (${window.I18N && best === "/blog/" ? I18N.t("nav.blog") : pages[best]})?`);
+      } else out.textContent = (window.I18N ? I18N.t("404.try") : "try one of the links below, or press ` for a terminal.");
+    });
   </script>
+  <script src="/assets/i18n.js"></script>
+  <script src="/assets/i18n-strings.js"></script>
   <script src="/projects.js"></script>
   <script src="/assets/blog.js" defer></script>
 </body>

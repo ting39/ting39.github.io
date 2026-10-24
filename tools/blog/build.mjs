@@ -47,8 +47,10 @@ export function loadPosts(root, { drafts = false } = {}) {
   const dir = join(root, "posts");
   if (!existsSync(dir)) return [];
   const posts = [];
+  const TR = /^([a-z0-9][a-z0-9-]*)\.(zh-TW|ja)\.md$/;   // translations: <slug>.zh-TW.md, <slug>.ja.md
   for (const name of readdirSync(dir).sort()) {
     if (!name.endsWith(".md") || name.startsWith("_") || name.startsWith(".") || /^readme\.md$/i.test(name)) continue;
+    if (TR.test(name)) continue;
     const file = `posts/${name}`;
     const slug = name.slice(0, -3);
     if (!/^[a-z0-9][a-z0-9-]*$/.test(slug)) throw new Error(`${file}: file names become URLs, so use lowercase letters, digits and dashes (e.g. "${slugify(slug) || "my-post"}.md")`);
@@ -71,6 +73,23 @@ export function loadPosts(root, { drafts = false } = {}) {
       draft: d.draft === true,
       html: r.html, headings: r.headings, readingTime: stats.minutes, words: stats.words, bytes: Buffer.byteLength(raw),
     });
+  }
+  // attach translations (title/summary/body in another language; date and tags come from the main post)
+  for (const name of readdirSync(dir).sort()) {
+    const m = name.match(TR);
+    if (!m) continue;
+    const post = posts.find((p) => p.slug === m[1]);
+    if (!post) continue;   // translation of a draft or missing post
+    const file = `posts/${name}`;
+    let fm;
+    try { fm = parseFrontMatter(readFileSync(join(dir, name), "utf8")); } catch (e) { throw new Error(`${file}: ${e.message}`); }
+    if (!fm.data.title) throw new Error(`${file}: front matter needs a "title"`);
+    const r = render(fm.body);
+    const stats = readingStats(r.html);
+    (post.tr ||= {})[m[2]] = {
+      title: String(fm.data.title).trim(), summary: String(fm.data.summary || firstParagraph(r.html) || fm.data.title).trim(),
+      html: r.html, headings: r.headings, readingTime: stats.minutes,
+    };
   }
   return posts.sort((a, b) => b.date.localeCompare(a.date) || a.title.localeCompare(b.title));
 }
@@ -99,7 +118,8 @@ export function build(root, opts = {}) {
   for (const t of tags) files.set(`blog/tags/${t.slug}/index.html`, tagPage({ tag: t, posts: t.posts, tags, v, ogImage }));
 
   files.set("posts.json", JSON.stringify({
-    posts: posts.map((p) => ({ slug: p.slug, title: p.title, date: p.date, updated: p.updated, tags: p.tags, summary: p.summary, readingTime: p.readingTime, words: p.words, bytes: p.bytes, lang: p.lang, url: `blog/${p.slug}/` })),
+    posts: posts.map((p) => ({ slug: p.slug, title: p.title, date: p.date, updated: p.updated, tags: p.tags, summary: p.summary, readingTime: p.readingTime, words: p.words, bytes: p.bytes, lang: p.lang, url: `blog/${p.slug}/`,
+      ...(p.tr ? { i18n: Object.fromEntries(Object.entries(p.tr).map(([l, t]) => [l, { title: t.title, summary: t.summary, readingTime: t.readingTime }])) } : {}) })),
   }, null, 2) + "\n");
 
   const latest = posts.reduce((m, p) => ((p.updated || p.date) > m ? p.updated || p.date : m), "2026-10-20");
