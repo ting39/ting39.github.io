@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-19",
+  "updated": "2026-10-26",
   "range": "last 4 weeks",
   "tracks": [
     {
@@ -10,11 +10,25 @@
       "url": "https://open.spotify.com/track/6NGOOdNawYMOf3yUo9p8MF"
     },
     {
-      "name": "Resound",
-      "artists": "Nhato",
-      "album": "VANGUARD",
-      "image": "https://i.scdn.co/image/ab67616d00001e02ea0332af047eefc09e40dabf",
-      "url": "https://open.spotify.com/track/7k3JPLCuqiUsfIvQqBPhha"
+      "name": "Jack-in-the-VOX",
+      "artists": "t+pazolite",
+      "album": "Jack-in-the-VOX",
+      "image": "https://i.scdn.co/image/ab67616d00001e0295c19d8e80fcb0e28785f34f",
+      "url": "https://open.spotify.com/track/0jPTnIiQZiQ2Q7ZkVMem6T"
+    },
+    {
+      "name": "Tokyo Midnight (feat. mami)",
+      "artists": "Yuta Imai, Mami",
+      "album": "Tokyo Midnight (feat. mami)",
+      "image": "https://i.scdn.co/image/ab67616d00001e02a81b8cc88c114801b30c526b",
+      "url": "https://open.spotify.com/track/3MW6Xx6gp17o4WSuxLj3PN"
+    },
+    {
+      "name": "Realize",
+      "artists": "Srav3R",
+      "album": "Realize",
+      "image": "https://i.scdn.co/image/ab67616d00001e027cfe3e7f9f685b92927626f3",
+      "url": "https://open.spotify.com/track/28KbKarBWiWn8UqX8sVZYp"
     },
     {
       "name": "怪電話",
@@ -22,20 +36,6 @@
       "album": "怪電話",
       "image": "https://i.scdn.co/image/ab67616d00001e0281e0bf68a882f9342768adf0",
       "url": "https://open.spotify.com/track/4GXhFwLTkbxGpSdPAw9Az1"
-    },
-    {
-      "name": "Twisted Drop Party",
-      "artists": "t+pazolite, Getty",
-      "album": "HYPER DUO",
-      "image": "https://i.scdn.co/image/ab67616d00001e02ef7b16a4fed3a47392b1b0ce",
-      "url": "https://open.spotify.com/track/4OfTNhkAOCnz31iBe5jjox"
-    },
-    {
-      "name": "SHOJO GA MITA NIHON NO GENFUKEI",
-      "artists": "上海アリス幻樂団",
-      "album": "東方風神録 〜 Mountain of Faith. サウンドトラック",
-      "image": "https://i.scdn.co/image/ab67616d00001e028ac39997f69b349cb482c174",
-      "url": "https://open.spotify.com/track/5kQ8CVfMR18f9AB5V8e8xr"
     }
   ]
 }
