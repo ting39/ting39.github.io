@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-26",
+  "updated": "2026-11-02",
   "range": "last 4 weeks",
   "tracks": [
     {
@@ -17,25 +17,25 @@
       "url": "https://open.spotify.com/track/0jPTnIiQZiQ2Q7ZkVMem6T"
     },
     {
+      "name": "UROSOUSETSU (ver.OPW)",
+      "artists": "t+pazolite, Chiharu Kaneko",
+      "album": "OMOIDE Patchwork",
+      "image": "https://i.scdn.co/image/ab67616d00001e0291c8896777b205baab7402cb",
+      "url": "https://open.spotify.com/track/0UAid8cMjTNIz0yYUUaoCO"
+    },
+    {
+      "name": "(and you are the) SMILEDIGGER",
+      "artists": "t+pazolite",
+      "album": "REIMEI My WORLD",
+      "image": "https://i.scdn.co/image/ab67616d00001e02816151ec67579e35b9d837b8",
+      "url": "https://open.spotify.com/track/0Vboz3m4Q0HgVNM8yck9kz"
+    },
+    {
       "name": "Tokyo Midnight (feat. mami)",
       "artists": "Yuta Imai, Mami",
       "album": "Tokyo Midnight (feat. mami)",
       "image": "https://i.scdn.co/image/ab67616d00001e02a81b8cc88c114801b30c526b",
       "url": "https://open.spotify.com/track/3MW6Xx6gp17o4WSuxLj3PN"
-    },
-    {
-      "name": "Realize",
-      "artists": "Srav3R",
-      "album": "Realize",
-      "image": "https://i.scdn.co/image/ab67616d00001e027cfe3e7f9f685b92927626f3",
-      "url": "https://open.spotify.com/track/28KbKarBWiWn8UqX8sVZYp"
-    },
-    {
-      "name": "怪電話",
-      "artists": "r-906, 夢ノ結唱 ROSE, 夢ノ結唱 POPY",
-      "album": "怪電話",
-      "image": "https://i.scdn.co/image/ab67616d00001e0281e0bf68a882f9342768adf0",
-      "url": "https://open.spotify.com/track/4GXhFwLTkbxGpSdPAw9Az1"
     }
   ]
 }
